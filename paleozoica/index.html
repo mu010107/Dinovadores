@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-PT">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Dinovadores | Experiência Premium</title>
+  <title>Dinovadores | Era Paleozoica</title>
   
   <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.1.1/model-viewer.min.js"></script>
   
@@ -11,8 +11,9 @@
   
   <style>
     :root {
-      --primary: #FF4500;
-      --bg-dark: #121212;
+      /* Mudámos a cor de destaque para azul, a representar os oceanos primitivos */
+      --primary: #0077b6; 
+      --bg-dark: #0a1128;
       --glass-bg: rgba(255, 255, 255, 0.05);
       --glass-border: rgba(255, 255, 255, 0.1);
     }
@@ -24,7 +25,6 @@
       color: white; overflow: hidden;
     }
     
-    /* Cabeçalho Premium */
     .header {
       position: absolute; top: 0; left: 0; width: 100%;
       padding: 25px 20px; box-sizing: border-box; z-index: 10;
@@ -34,13 +34,12 @@
     .header span { color: var(--primary); }
     .header p { margin: 5px 0 0 0; font-size: 0.85rem; color: #ccc; font-weight: 400; }
     
-    /* O Visualizador 3D cobrindo a tela toda */
     model-viewer {
       width: 100%; height: 100%; outline: none;
-      background: radial-gradient(circle at center, #2a2a2a 0%, #121212 100%);
+      /* Fundo com um tom azulado profundo */
+      background: radial-gradient(circle at center, #1b2a47 0%, #0a1128 100%);
     }
     
-    /* Painel Flutuante estilo "Glassmorphism" (Vidro) */
     .ui-panel {
       position: absolute; bottom: 40px; left: 50%;
       transform: translateX(-50%); width: 85%; max-width: 400px;
@@ -52,17 +51,15 @@
     .ui-panel h2 { margin: 0 0 5px 0; font-size: 1.4rem; font-weight: 600; }
     .ui-panel p { margin: 0 0 20px 0; font-size: 0.9rem; color: #bbb; }
     
-    /* Botão de Realidade Aumentada customizado */
     .ar-button {
       background-color: var(--primary); color: white;
       border: none; border-radius: 30px; padding: 15px 30px;
       font-size: 1rem; font-weight: 600; cursor: pointer;
-      box-shadow: 0 4px 15px rgba(255, 69, 0, 0.4);
+      box-shadow: 0 4px 15px rgba(0, 119, 182, 0.4);
       transition: all 0.3s ease; width: 100%; letter-spacing: 0.5px;
     }
-    .ar-button:hover { background-color: #ff5e22; transform: translateY(-2px); }
+    .ar-button:hover { background-color: #0096c7; transform: translateY(-2px); }
     
-    /* Esconde o botão padrão feio do model-viewer */
     model-viewer::part(default-ar-button) { display: none; }
   </style>
 </head>
@@ -75,22 +72,23 @@
 
   <model-viewer 
     id="dino-viewer"
-    src="https://modelviewer.dev/shared-assets/models/Astronaut.glb" 
+    src="https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/master/2.0/BarramundiFish/glTF-Binary/BarramundiFish.glb" 
     ar 
     ar-modes="webxr scene-viewer quick-look" 
     camera-controls 
     auto-rotate 
+    autoplay
     rotation-per-second="30deg"
     shadow-intensity="1.5"
     exposure="1.1">
   </model-viewer>
 
   <div class="ui-panel">
-    <h2>Era Mesozoica</h2>
-    <p>O apogeu dos grandes répteis e a dominação do superpredador na Terra.</p>
+    <h2>Era Paleozoica</h2>
+    <p>A explosão da vida marinha e o surgimento dos primeiros vertebrados nos oceanos primitivos.</p>
     
     <button class="ar-button" onclick="document.querySelector('#dino-viewer').activateAR()">
-      Ver no meu ambiente
+      Ver no meu espaço
     </button>
   </div>
 
