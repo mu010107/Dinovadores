@@ -11,6 +11,9 @@
 
   <title>Mesozoica | Dinovadores</title>
 
+  <!-- API oficial do Sketchfab -->
+  <script src="https://static.sketchfab.com/api/sketchfab-viewer-1.12.1.js"></script>
+
   <style>
     :root{
       --bg:#120903;
@@ -129,7 +132,7 @@
       left:50%;
       bottom:24px;
       transform:translateX(-50%);
-      z-index:7;
+      z-index:12;
       width:calc(100% - 32px);
       padding:13px 16px;
       border-radius:15px;
@@ -148,7 +151,7 @@
     .ctrl-btn{
       position:absolute;
       top:14px;
-      z-index:8;
+      z-index:13;
       border:1px solid rgba(255,255,255,.22);
       border-radius:999px;
       padding:9px 13px;
@@ -186,6 +189,86 @@
       font-size:.9rem;
       line-height:1.35;
       pointer-events:none;
+    }
+
+    /* Foto exibida quando o 3D não funciona */
+
+    .fallback-layer{
+      position:absolute;
+      inset:0;
+      z-index:10;
+      overflow:hidden;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      background:#17100c;
+      opacity:0;
+      visibility:hidden;
+      transition:
+        opacity .6s ease,
+        visibility .6s ease;
+    }
+
+    .fallback-layer.is-visible{
+      opacity:1;
+      visibility:visible;
+    }
+
+    .fallback-image{
+      width:100%;
+      height:100%;
+      object-fit:cover;
+      object-position:center;
+      filter:brightness(.72) saturate(.9);
+    }
+
+    .fallback-layer::after{
+      content:"";
+      position:absolute;
+      inset:0;
+      background:
+        linear-gradient(
+          to bottom,
+          rgba(15,7,2,.05) 35%,
+          rgba(15,7,2,.92) 100%
+        );
+      pointer-events:none;
+    }
+
+    .fallback-info{
+      position:absolute;
+      left:16px;
+      right:16px;
+      bottom:18px;
+      z-index:2;
+      padding:14px;
+      border-radius:15px;
+      background:rgba(20,9,3,.90);
+      color:#fff;
+      line-height:1.35;
+    }
+
+    .fallback-info strong{
+      display:block;
+      margin-bottom:5px;
+      color:#ffad6a;
+      font-size:1rem;
+    }
+
+    .fallback-info span{
+      display:block;
+      font-size:.9rem;
+    }
+
+    .fallback-credit{
+      display:block;
+      margin-top:7px;
+      color:#c7b5aa;
+      font-size:.68rem;
+    }
+
+    .fallback-credit a{
+      color:#ffd2af;
     }
 
     .buttons{
@@ -296,14 +379,44 @@
         <iframe
           id="trexModel"
           title="Tiranossauro Rex 3D animado"
-          data-src="https://sketchfab.com/models/aa18b6bbd51347e3864e8f938607c14f/embed?autostart=1&amp;animation_autoplay=1&amp;max_texture_size=512&amp;ui_animations=0&amp;ui_stop=0&amp;ui_share=0"
           allow="autoplay; fullscreen; xr-spatial-tracking"
           allowfullscreen>
         </iframe>
 
-        <div class="model-hint">
+        <div class="model-hint" id="modelHint">
           Arraste para girar e faça o gesto de pinça para aproximar.
-          Modelo 3D animado disponibilizado por 3DRT.com.
+          Modelo 3D animado disponibilizado por LasquetiSpice.
+        </div>
+
+        <div class="fallback-layer" id="fallbackLayer">
+
+          <img
+            class="fallback-image"
+            id="fallbackImage"
+            data-src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/2d/Tyrannosaurus_rex_model_of_the_Natural_History_Museum%2C_London.jpg/960px-Tyrannosaurus_rex_model_of_the_Natural_History_Museum%2C_London.jpg"
+            alt="Reconstrução de um Tiranossauro Rex">
+
+          <div class="fallback-info">
+
+            <strong>Visualização alternativa</strong>
+
+            <span>
+              Este aparelho não conseguiu abrir o modelo 3D.
+              Por isso, estamos exibindo uma imagem do Tiranossauro Rex.
+            </span>
+
+            <small class="fallback-credit">
+              Imagem:
+              <a
+                href="https://commons.wikimedia.org/wiki/File:Tyrannosaurus_rex_model_of_the_Natural_History_Museum,_London.jpg"
+                target="_blank"
+                rel="noopener noreferrer">
+                APK / Wikimedia Commons
+              </a>
+              · CC BY 4.0
+            </small>
+
+          </div>
         </div>
 
       </div>
@@ -352,7 +465,22 @@
     const trexModel =
       document.getElementById("trexModel");
 
+    const modelHint =
+      document.getElementById("modelHint");
+
+    const fallbackLayer =
+      document.getElementById("fallbackLayer");
+
+    const fallbackImage =
+      document.getElementById("fallbackImage");
+
+    const TREX_ID =
+      "38007d947ae74dea83988cb0b08ee053";
+
     let transitionStarted = false;
+    let fallbackShown = false;
+    let modelVerified = false;
+    let modelTimeout = null;
 
     audioButton.addEventListener("click", () => {
       if(video.muted){
@@ -364,6 +492,324 @@
       }
     });
 
+    /*
+      Verifica se o navegador consegue criar
+      um contexto WebGL.
+    */
+    function supportsWebGL(){
+      try{
+        const canvas = document.createElement("canvas");
+
+        const gl =
+          canvas.getContext("webgl") ||
+          canvas.getContext("experimental-webgl");
+
+        if(!gl){
+          return false;
+        }
+
+        /*
+          Libera imediatamente o contexto de teste
+          para não ocupar memória do celular.
+        */
+        const extension =
+          gl.getExtension("WEBGL_lose_context");
+
+        if(extension){
+          extension.loseContext();
+        }
+
+        return true;
+
+      }catch(error){
+        return false;
+      }
+    }
+
+    /*
+      Exibe a foto e remove completamente o
+      visualizador 3D da memória.
+    */
+    function showFallback(){
+      if(fallbackShown || modelVerified){
+        return;
+      }
+
+      fallbackShown = true;
+
+      if(modelTimeout){
+        clearTimeout(modelTimeout);
+      }
+
+      if(!fallbackImage.getAttribute("src")){
+        fallbackImage.src =
+          fallbackImage.dataset.src;
+      }
+
+      modelHint.style.display = "none";
+      trexModel.style.display = "none";
+
+      fallbackLayer.classList.add("is-visible");
+
+      /*
+        Remove o modelo depois de esconder o iframe.
+      */
+      setTimeout(() => {
+        try{
+          trexModel.src = "about:blank";
+        }catch(error){
+          /* Nenhuma ação necessária */
+        }
+      }, 100);
+    }
+
+    /*
+      Confirma que o modelo realmente foi desenhado.
+    */
+    function markModelAsVerified(){
+      if(fallbackShown){
+        return;
+      }
+
+      modelVerified = true;
+
+      if(modelTimeout){
+        clearTimeout(modelTimeout);
+      }
+    }
+
+    /*
+      Analisa uma pequena captura do modelo.
+      Se ela estiver vazia ou praticamente de uma
+      cor só, considera que o T-Rex não foi renderizado.
+    */
+    function inspectScreenshot(imageData){
+      const verificationImage = new Image();
+
+      verificationImage.onload = () => {
+        try{
+          const canvas =
+            document.createElement("canvas");
+
+          canvas.width = 48;
+          canvas.height = 48;
+
+          const context =
+            canvas.getContext("2d", {
+              willReadFrequently:true
+            });
+
+          context.drawImage(
+            verificationImage,
+            0,
+            0,
+            48,
+            48
+          );
+
+          const pixels =
+            context.getImageData(
+              0,
+              0,
+              48,
+              48
+            ).data;
+
+          let minimum = 255;
+          let maximum = 0;
+          let sum = 0;
+          let sumSquared = 0;
+          let samples = 0;
+
+          /*
+            Analisa uma parte dos pixels para
+            reduzir o processamento no celular.
+          */
+          for(let index = 0;
+              index < pixels.length;
+              index += 16){
+
+            const red = pixels[index];
+            const green = pixels[index + 1];
+            const blue = pixels[index + 2];
+            const alpha = pixels[index + 3];
+
+            if(alpha < 20){
+              continue;
+            }
+
+            const brightness =
+              (red * 0.299) +
+              (green * 0.587) +
+              (blue * 0.114);
+
+            minimum =
+              Math.min(minimum, brightness);
+
+            maximum =
+              Math.max(maximum, brightness);
+
+            sum += brightness;
+            sumSquared += brightness * brightness;
+            samples++;
+          }
+
+          if(samples < 40){
+            showFallback();
+            return;
+          }
+
+          const average =
+            sum / samples;
+
+          const variance =
+            (sumSquared / samples) -
+            (average * average);
+
+          const brightnessRange =
+            maximum - minimum;
+
+          /*
+            Uma imagem sem o T-Rex normalmente
+            fica praticamente toda cinza.
+          */
+          if(
+            variance < 30 &&
+            brightnessRange < 28
+          ){
+            showFallback();
+          }else{
+            markModelAsVerified();
+          }
+
+        }catch(error){
+          showFallback();
+        }
+      };
+
+      verificationImage.onerror =
+        showFallback;
+
+      verificationImage.src = imageData;
+    }
+
+    /*
+      Solicita ao Sketchfab uma pequena captura.
+      Isso confirma se o T-Rex foi realmente desenhado.
+    */
+    function verifyModelRender(api){
+      let screenshotFinished = false;
+
+      const screenshotTimeout =
+        setTimeout(() => {
+          if(!screenshotFinished){
+            showFallback();
+          }
+        }, 5000);
+
+      try{
+        api.getScreenShot(
+          96,
+          96,
+          "image/png",
+          (error, result) => {
+            screenshotFinished = true;
+            clearTimeout(screenshotTimeout);
+
+            if(
+              fallbackShown ||
+              error ||
+              !result ||
+              typeof result !== "string"
+            ){
+              showFallback();
+              return;
+            }
+
+            inspectScreenshot(result);
+          }
+        );
+
+      }catch(error){
+        clearTimeout(screenshotTimeout);
+        showFallback();
+      }
+    }
+
+    /*
+      Inicia o T-Rex original animado.
+    */
+    function startTrexModel(){
+      if(!supportsWebGL()){
+        showFallback();
+        return;
+      }
+
+      if(typeof window.Sketchfab !== "function"){
+        showFallback();
+        return;
+      }
+
+      /*
+        Se o modelo não for confirmado em 16 segundos,
+        a imagem alternativa será exibida.
+      */
+      modelTimeout =
+        setTimeout(showFallback, 16000);
+
+      try{
+        const client =
+          new window.Sketchfab(
+            "1.12.1",
+            trexModel
+          );
+
+        client.init(TREX_ID, {
+
+          autostart:1,
+          preload:1,
+          animation_autoplay:1,
+
+          /*
+            Texturas menores ajudam celulares
+            com pouca memória gráfica.
+          */
+          max_texture_size:512,
+
+          ui_animations:0,
+          ui_stop:0,
+          ui_share:0,
+          ui_inspector:0,
+          ui_settings:0,
+
+          success:function(api){
+
+            api.addEventListener(
+              "viewerready",
+              () => {
+                /*
+                  Aguarda o primeiro desenho completo
+                  antes de testar a imagem.
+                */
+                setTimeout(() => {
+                  verifyModelRender(api);
+                }, 2500);
+              }
+            );
+
+            api.start();
+          },
+
+          error:function(){
+            showFallback();
+          }
+        });
+
+      }catch(error){
+        showFallback();
+      }
+    }
+
     function showModel(){
       if(transitionStarted){
         return;
@@ -374,22 +820,16 @@
       experience.classList.add("show-message");
 
       /*
-        Libera a memória utilizada pelo vídeo antes
-        de abrir o modelo 3D. Isso ajuda em celulares.
+        Libera a memória usada pelo vídeo antes
+        de abrir o modelo 3D.
       */
       video.pause();
       video.removeAttribute("src");
       video.preload = "none";
       video.load();
 
-      /*
-        O modelo só é carregado depois que o vídeo
-        já foi removido da memória.
-      */
       setTimeout(() => {
-        if(!trexModel.getAttribute("src")){
-          trexModel.src = trexModel.dataset.src;
-        }
+        startTrexModel();
       }, 200);
 
       setTimeout(() => {
@@ -401,11 +841,15 @@
       }, 1200);
     }
 
-    video.addEventListener("ended", showModel);
+    video.addEventListener(
+      "ended",
+      showModel
+    );
 
-    skipButton.addEventListener("click", () => {
-      showModel();
-    });
+    skipButton.addEventListener(
+      "click",
+      showModel
+    );
   </script>
 </body>
 </html>
