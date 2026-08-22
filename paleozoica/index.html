@@ -1,96 +1,361 @@
 <!DOCTYPE html>
-<html lang="pt-PT">
+<html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Dinovadores | Era Paleozoica</title>
-  
-  <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.1.1/model-viewer.min.js"></script>
-  
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
-  
+  <meta name="theme-color" content="#07100f">
+  <title>Paleozoica | Dinovadores</title>
+
   <style>
-    :root {
-      /* Mudámos a cor de destaque para azul, a representar os oceanos primitivos */
-      --primary: #0077b6; 
-      --bg-dark: #0a1128;
-      --glass-bg: rgba(255, 255, 255, 0.05);
-      --glass-border: rgba(255, 255, 255, 0.1);
+    :root{
+      --bg:#07100f;
+      --panel:#0d1815;
+      --text:#ffffff;
+      --muted:#c8d4cf;
+      --accent:#39ef8e;
+      --accent2:#087446;
+      --radius:22px;
     }
-    
-    body, html {
-      margin: 0; padding: 0; width: 100%; height: 100%;
-      background-color: var(--bg-dark);
-      font-family: 'Poppins', sans-serif;
-      color: white; overflow: hidden;
+
+    *{box-sizing:border-box}
+
+    body{
+      margin:0;
+      min-height:100vh;
+      background:
+        radial-gradient(
+          circle at 50% 0%,
+          rgba(0,178,98,.20),
+          transparent 28rem
+        ),
+        var(--bg);
+      color:var(--text);
+      font-family:Arial,Helvetica,sans-serif;
     }
-    
-    .header {
-      position: absolute; top: 0; left: 0; width: 100%;
-      padding: 25px 20px; box-sizing: border-box; z-index: 10;
-      background: linear-gradient(to bottom, rgba(0,0,0,0.8), transparent);
+
+    .page{
+      width:min(760px, calc(100% - 16px));
+      margin:auto;
+      padding:18px 0 32px;
+      text-align:center;
     }
-    .header h1 { margin: 0; font-size: 1.8rem; font-weight: 800; letter-spacing: 1px; }
-    .header span { color: var(--primary); }
-    .header p { margin: 5px 0 0 0; font-size: 0.85rem; color: #ccc; font-weight: 400; }
-    
-    model-viewer {
-      width: 100%; height: 100%; outline: none;
-      /* Fundo com um tom azulado profundo */
-      background: radial-gradient(circle at center, #1b2a47 0%, #0a1128 100%);
+
+    h1{
+      margin:18px 0 10px;
+      font-size:clamp(2.7rem, 11vw, 5.3rem);
+      line-height:.95;
+      text-transform:uppercase;
     }
-    
-    .ui-panel {
-      position: absolute; bottom: 40px; left: 50%;
-      transform: translateX(-50%); width: 85%; max-width: 400px;
-      background: var(--glass-bg); backdrop-filter: blur(12px);
-      border: 1px solid var(--glass-border); border-radius: 24px;
-      padding: 25px; box-shadow: 0 15px 35px rgba(0,0,0,0.5); z-index: 10;
-      text-align: center;
+
+    .period{
+      color:#74f0aa;
+      font-size:clamp(1rem, 4vw, 1.35rem);
+      font-weight:800;
     }
-    .ui-panel h2 { margin: 0 0 5px 0; font-size: 1.4rem; font-weight: 600; }
-    .ui-panel p { margin: 0 0 20px 0; font-size: 0.9rem; color: #bbb; }
-    
-    .ar-button {
-      background-color: var(--primary); color: white;
-      border: none; border-radius: 30px; padding: 15px 30px;
-      font-size: 1rem; font-weight: 600; cursor: pointer;
-      box-shadow: 0 4px 15px rgba(0, 119, 182, 0.4);
-      transition: all 0.3s ease; width: 100%; letter-spacing: 0.5px;
+
+    .summary{
+      max-width:640px;
+      margin:22px auto 28px;
+      color:var(--muted);
+      font-size:1.05rem;
+      line-height:1.65;
     }
-    .ar-button:hover { background-color: #0096c7; transform: translateY(-2px); }
-    
-    model-viewer::part(default-ar-button) { display: none; }
+
+    .experience{
+      position:relative;
+      overflow:hidden;
+      min-height:520px;
+      border-radius:var(--radius);
+      background:var(--panel);
+    }
+
+    .media-layer{
+      position:absolute;
+      inset:0;
+      width:100%;
+      height:100%;
+      transition:opacity 1s ease, visibility 1s ease;
+    }
+
+    video,
+    .model-frame{
+      width:100%;
+      height:100%;
+      min-height:520px;
+      background:#111;
+    }
+
+    video{
+      object-fit:cover;
+    }
+
+    .model-frame{
+      display:block;
+      border:0;
+    }
+
+    #videoLayer{
+      opacity:1;
+      visibility:visible;
+      z-index:2;
+    }
+
+    #modelLayer{
+      opacity:0;
+      visibility:hidden;
+      z-index:1;
+    }
+
+    .experience.show-model #videoLayer{
+      opacity:0;
+      visibility:hidden;
+    }
+
+    .experience.show-model #modelLayer{
+      opacity:1;
+      visibility:visible;
+    }
+
+    .transition-message{
+      position:absolute;
+      left:50%;
+      bottom:24px;
+      transform:translateX(-50%);
+      z-index:4;
+      width:calc(100% - 32px);
+      padding:13px 16px;
+      border-radius:15px;
+      background:rgba(5,14,11,.82);
+      color:#fff;
+      font-weight:700;
+      opacity:0;
+      transition:opacity .7s ease;
+      pointer-events:none;
+    }
+
+    .experience.show-message .transition-message{
+      opacity:1;
+    }
+
+    .ctrl-btn{
+      position:absolute;
+      top:14px;
+      z-index:5;
+      border:1px solid rgba(255,255,255,.22);
+      border-radius:999px;
+      padding:9px 13px;
+      background:rgba(5,14,11,.72);
+      color:#fff;
+      font-weight:800;
+      cursor:pointer;
+      display:flex;
+      align-items:center;
+      gap:6px;
+      font-size:0.85rem;
+      backdrop-filter:blur(6px);
+      -webkit-backdrop-filter:blur(6px);
+    }
+
+    .skip{
+      right:14px;
+    }
+
+    .audio-btn{
+      left:14px;
+    }
+
+    .buttons{
+      display:grid;
+      gap:12px;
+      margin-top:18px;
+    }
+
+    .button{
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      min-height:58px;
+      padding:14px;
+      border:0;
+      border-radius:16px;
+      color:#fff;
+      text-decoration:none;
+      font-weight:900;
+      background:linear-gradient(
+        135deg,
+        var(--accent2),
+        var(--accent)
+      );
+    }
+
+    .button.secondary{
+      background:#0d1815;
+      border:1px solid rgba(57,239,142,.30);
+    }
+
+    .model-hint{
+      position:absolute;
+      left:50%;
+      bottom:62px;
+      transform:translateX(-50%);
+      z-index:3;
+      width:calc(100% - 32px);
+      padding:12px 14px;
+      border-radius:14px;
+      background:rgba(5,14,11,.78);
+      color:#e1ebe6;
+      font-size:.9rem;
+      pointer-events:none;
+    }
+
+    footer{
+      padding:24px 0 0;
+      color:#74877e;
+      font-size:.84rem;
+    }
+
+    @media(max-width:600px){
+      .page{
+        width:calc(100% - 10px);
+        padding-top:10px;
+      }
+
+      .experience,
+      video,
+      .model-frame{
+        min-height:500px;
+      }
+
+      .summary{
+        padding:0 12px;
+      }
+    }
   </style>
 </head>
+
 <body>
+  <main class="page">
+    <h1>Paleozoica</h1>
 
-  <div class="header">
-    <h1>DINO<span>VADORES</span></h1>
-    <p>FESC 2026 • Colégio Objetivo</p>
-  </div>
+    <div class="period">
+      541 a 252 milhões de anos atrás
+    </div>
 
-  <model-viewer 
-    id="dino-viewer"
-    src="https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/master/2.0/BarramundiFish/glTF-Binary/BarramundiFish.glb" 
-    ar 
-    ar-modes="webxr scene-viewer quick-look" 
-    camera-controls 
-    auto-rotate 
-    autoplay
-    rotation-per-second="30deg"
-    shadow-intensity="1.5"
-    exposure="1.1">
-  </model-viewer>
+    <p class="summary">
+      Nesse período, a vida se diversificou nos oceanos e conquistou
+      a terra firme. Surgiram peixes, plantas, insetos, anfíbios e
+      répteis, e formou-se a Pangeia.
+    </p>
 
-  <div class="ui-panel">
-    <h2>Era Paleozoica</h2>
-    <p>A explosão da vida marinha e o surgimento dos primeiros vertebrados nos oceanos primitivos.</p>
-    
-    <button class="ar-button" onclick="document.querySelector('#dino-viewer').activateAR()">
-      Ver no meu espaço
-    </button>
-  </div>
+    <section class="experience" id="experience">
+      <button
+        class="ctrl-btn audio-btn"
+        id="audioButton"
+        type="button">
+        🔇 Som
+      </button>
 
+      <button
+        class="ctrl-btn skip"
+        id="skipButton"
+        type="button">
+        Pular vídeo
+      </button>
+
+      <div class="media-layer" id="videoLayer">
+        <video
+          id="eraVideo"
+          src="paleozoica.mp4"
+          autoplay
+          muted
+          playsinline
+          preload="metadata">
+        </video>
+      </div>
+
+      <div class="media-layer" id="modelLayer">
+        <iframe
+          id="trilobiteModel"
+          class="model-frame"
+          title="Modelo 3D de um trilobita"
+          data-src="https://sketchfab.com/models/0c18dda9540945c3a59482f9a88e1147/embed?autostart=1&amp;ui_stop=0&amp;ui_share=0"
+          allow="autoplay; fullscreen; xr-spatial-tracking"
+          allowfullscreen>
+        </iframe>
+
+        <div class="model-hint">
+          Arraste para girar e faça o gesto de pinça para aproximar.
+          Modelo 3D disponibilizado pelo Sedgwick Museum of Earth Sciences.
+        </div>
+      </div>
+
+      <div class="transition-message">
+        Agora explore em 3D um trilobita, um dos maiores símbolos
+        da vida marinha paleozoica.
+      </div>
+    </section>
+
+    <div class="buttons">
+      <a class="button secondary" href="../index.html">
+        🏠 Página inicial
+      </a>
+
+      <a class="button secondary" href="../mesozoica/index.html">
+        ➡ Próxima era
+      </a>
+    </div>
+
+    <footer>
+      Projeto Dinovadores · FESC · Objetivo Mogi
+    </footer>
+  </main>
+
+  <script>
+    const experience = document.getElementById("experience");
+    const video = document.getElementById("eraVideo");
+    const skipButton = document.getElementById("skipButton");
+    const audioButton = document.getElementById("audioButton");
+    const trilobiteModel =
+      document.getElementById("trilobiteModel");
+
+    let transitionStarted = false;
+
+    audioButton.addEventListener("click", () => {
+      if (video.muted) {
+        video.muted = false;
+        audioButton.textContent = "🔊 Som";
+      } else {
+        video.muted = true;
+        audioButton.textContent = "🔇 Som";
+      }
+    });
+
+    function showModel(){
+      if (transitionStarted) return;
+
+      transitionStarted = true;
+      experience.classList.add("show-message");
+
+      if (!trilobiteModel.getAttribute("src")) {
+        trilobiteModel.src =
+          trilobiteModel.dataset.src;
+      }
+
+      setTimeout(() => {
+        experience.classList.remove("show-message");
+        experience.classList.add("show-model");
+
+        skipButton.style.display = "none";
+        audioButton.style.display = "none";
+      }, 1200);
+    }
+
+    video.addEventListener("ended", showModel);
+
+    skipButton.addEventListener("click", () => {
+      video.pause();
+      showModel();
+    });
+  </script>
 </body>
 </html>
