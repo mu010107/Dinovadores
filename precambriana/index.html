@@ -127,9 +127,8 @@
       opacity:1;
     }
 
-    .skip{
+    .ctrl-btn{
       position:absolute;
-      right:14px;
       top:14px;
       z-index:5;
       border:1px solid rgba(255,255,255,.22);
@@ -139,6 +138,20 @@
       color:#fff;
       font-weight:800;
       cursor:pointer;
+      display:flex;
+      align-items:center;
+      gap:6px;
+      font-size:0.85rem;
+      backdrop-filter:blur(6px);
+      -webkit-backdrop-filter:blur(6px);
+    }
+
+    .skip{
+      right:14px;
+    }
+
+    .audio-btn{
+      left:14px;
     }
 
     .buttons{
@@ -211,7 +224,8 @@
     </p>
 
     <section class="experience" id="experience">
-      <button class="skip" id="skipButton" type="button">Pular vídeo</button>
+      <button class="ctrl-btn audio-btn" id="audioButton" type="button">🔇 Som</button>
+      <button class="ctrl-btn skip" id="skipButton" type="button">Pular vídeo</button>
 
       <div class="media-layer" id="videoLayer">
         <video
@@ -258,6 +272,17 @@
     const experience = document.getElementById("experience");
     const video = document.getElementById("eraVideo");
     const skipButton = document.getElementById("skipButton");
+    const audioButton = document.getElementById("audioButton");
+
+    audioButton.addEventListener("click", () => {
+      if (video.muted) {
+        video.muted = false;
+        audioButton.textContent = "🔊 Som";
+      } else {
+        video.muted = true;
+        audioButton.textContent = "🔇 Som";
+      }
+    });
 
     function showModel(){
       experience.classList.add("show-message");
@@ -266,6 +291,7 @@
         experience.classList.remove("show-message");
         experience.classList.add("show-model");
         skipButton.style.display = "none";
+        audioButton.style.display = "none";
       }, 1200);
     }
 
