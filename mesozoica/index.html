@@ -2,22 +2,29 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="theme-color" content="#110b06">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0">
+
+  <meta name="theme-color" content="#120903">
+
   <title>Mesozoica | Dinovadores</title>
 
   <style>
     :root{
-      --bg:#110b06;
-      --panel:#1a1009;
+      --bg:#120903;
+      --panel:#1c0e06;
       --text:#ffffff;
-      --muted:#d8cec5;
-      --accent:#ff8a2a;
-      --accent2:#a33f00;
+      --muted:#e2d5cc;
+      --accent:#ff9b4a;
+      --accent2:#a94708;
       --radius:22px;
     }
 
-    *{box-sizing:border-box}
+    *{
+      box-sizing:border-box;
+    }
 
     body{
       margin:0;
@@ -25,10 +32,11 @@
       background:
         radial-gradient(
           circle at 50% 0%,
-          rgba(238,97,0,.20),
+          rgba(220,88,18,.24),
           transparent 28rem
         ),
         var(--bg);
+
       color:var(--text);
       font-family:Arial,Helvetica,sans-serif;
     }
@@ -48,7 +56,7 @@
     }
 
     .period{
-      color:#ffb06b;
+      color:#ffad6a;
       font-size:clamp(1rem, 4vw, 1.35rem);
       font-weight:800;
     }
@@ -74,24 +82,23 @@
       inset:0;
       width:100%;
       height:100%;
-      transition:opacity 1s ease, visibility 1s ease;
+      transition:
+        opacity 1s ease,
+        visibility 1s ease;
     }
 
     video,
-    .model-frame{
+    iframe{
+      display:block;
       width:100%;
       height:100%;
       min-height:520px;
-      background:#111;
+      border:0;
+      background:#16100c;
     }
 
     video{
       object-fit:cover;
-    }
-
-    .model-frame{
-      display:block;
-      border:0;
     }
 
     #videoLayer{
@@ -104,6 +111,7 @@
       opacity:0;
       visibility:hidden;
       z-index:1;
+      background:#b8b8b8;
     }
 
     .experience.show-model #videoLayer{
@@ -121,11 +129,11 @@
       left:50%;
       bottom:24px;
       transform:translateX(-50%);
-      z-index:4;
+      z-index:7;
       width:calc(100% - 32px);
       padding:13px 16px;
       border-radius:15px;
-      background:rgba(20,10,4,.82);
+      background:rgba(20,9,3,.88);
       color:#fff;
       font-weight:700;
       opacity:0;
@@ -140,11 +148,11 @@
     .ctrl-btn{
       position:absolute;
       top:14px;
-      z-index:5;
+      z-index:8;
       border:1px solid rgba(255,255,255,.22);
       border-radius:999px;
       padding:9px 13px;
-      background:rgba(20,10,4,.72);
+      background:rgba(20,9,3,.72);
       color:#fff;
       font-weight:800;
       cursor:pointer;
@@ -164,6 +172,22 @@
       left:14px;
     }
 
+    .model-hint{
+      position:absolute;
+      left:50%;
+      bottom:40px;
+      transform:translateX(-50%);
+      z-index:6;
+      width:calc(100% - 32px);
+      padding:12px 14px;
+      border-radius:14px;
+      background:rgba(20,10,4,.96);
+      color:#eee4dc;
+      font-size:.9rem;
+      line-height:1.35;
+      pointer-events:none;
+    }
+
     .buttons{
       display:grid;
       gap:12px;
@@ -181,36 +205,22 @@
       color:#fff;
       text-decoration:none;
       font-weight:900;
-      background:linear-gradient(
-        135deg,
-        var(--accent2),
-        var(--accent)
-      );
+      background:
+        linear-gradient(
+          135deg,
+          var(--accent2),
+          var(--accent)
+        );
     }
 
     .button.secondary{
-      background:#1a1009;
-      border:1px solid rgba(255,138,42,.32);
+      background:#1a0d07;
+      border:1px solid rgba(255,139,54,.34);
     }
-
-    .model-hint{
-  position:absolute;
-  left:50%;
-  bottom:40px;
-  transform:translateX(-50%);
-  z-index:6;
-  width:calc(100% - 32px);
-  padding:12px 14px;
-  border-radius:14px;
-  background:rgba(20,10,4,.96);
-  color:#eee4dc;
-  font-size:.9rem;
-  pointer-events:none;
-}
 
     footer{
       padding:24px 0 0;
-      color:#8f7968;
+      color:#9a7965;
       font-size:.84rem;
     }
 
@@ -222,12 +232,16 @@
 
       .experience,
       video,
-      .model-frame{
+      iframe{
         min-height:500px;
       }
 
       .summary{
         padding:0 12px;
+      }
+
+      .model-hint{
+        bottom:40px;
       }
     }
   </style>
@@ -235,6 +249,7 @@
 
 <body>
   <main class="page">
+
     <h1>Mesozoica</h1>
 
     <div class="period">
@@ -248,6 +263,7 @@
     </p>
 
     <section class="experience" id="experience">
+
       <button
         class="ctrl-btn audio-btn"
         id="audioButton"
@@ -263,6 +279,7 @@
       </button>
 
       <div class="media-layer" id="videoLayer">
+
         <video
           id="eraVideo"
           src="mesozoica.mp4"
@@ -271,73 +288,109 @@
           playsinline
           preload="metadata">
         </video>
+
       </div>
 
       <div class="media-layer" id="modelLayer">
+
         <iframe
           id="trexModel"
-          class="model-frame"
-          title="Modelo 3D animado de um Tyrannosaurus rex"
-          data-src="https://sketchfab.com/models/38007d947ae74dea83988cb0b08ee053/embed?autostart=1&amp;animation_autoplay=1&amp;max_texture_size=512&amp;ui_animations=0&amp;ui_stop=0&amp;ui_share=0"
+          title="Tiranossauro Rex 3D animado"
+          data-src="https://sketchfab.com/models/aa18b6bbd51347e3864e8f938607c14f/embed?autostart=1&amp;animation_autoplay=1&amp;max_texture_size=512&amp;ui_animations=0&amp;ui_stop=0&amp;ui_share=0"
           allow="autoplay; fullscreen; xr-spatial-tracking"
           allowfullscreen>
         </iframe>
 
         <div class="model-hint">
           Arraste para girar e faça o gesto de pinça para aproximar.
-          Modelo 3D animado disponibilizado por LasquetiSpice.
+          Modelo 3D animado disponibilizado por 3DRT.com.
         </div>
+
       </div>
 
       <div class="transition-message">
-        Agora explore em 3D o Tyrannosaurus rex, um dos maiores
-        predadores do final da Era Mesozoica.
+        Agora observe um dos maiores predadores que já viveram na Terra.
       </div>
+
     </section>
 
     <div class="buttons">
-      <a class="button secondary" href="../index.html">
+
+      <a
+        class="button secondary"
+        href="../index.html">
         🏠 Página inicial
       </a>
 
-      <a class="button secondary" href="../cenozoica/index.html">
+      <a
+        class="button secondary"
+        href="../cenozoica/index.html">
         ➡ Próxima era
       </a>
+
     </div>
 
     <footer>
       Projeto Dinovadores · FESC · Objetivo Mogi
     </footer>
+
   </main>
 
   <script>
-    const experience = document.getElementById("experience");
-    const video = document.getElementById("eraVideo");
-    const skipButton = document.getElementById("skipButton");
-    const audioButton = document.getElementById("audioButton");
-    const trexModel = document.getElementById("trexModel");
+    const experience =
+      document.getElementById("experience");
+
+    const video =
+      document.getElementById("eraVideo");
+
+    const skipButton =
+      document.getElementById("skipButton");
+
+    const audioButton =
+      document.getElementById("audioButton");
+
+    const trexModel =
+      document.getElementById("trexModel");
 
     let transitionStarted = false;
 
     audioButton.addEventListener("click", () => {
-      if (video.muted) {
+      if(video.muted){
         video.muted = false;
         audioButton.textContent = "🔊 Som";
-      } else {
+      }else{
         video.muted = true;
         audioButton.textContent = "🔇 Som";
       }
     });
 
     function showModel(){
-      if (transitionStarted) return;
+      if(transitionStarted){
+        return;
+      }
 
       transitionStarted = true;
+
       experience.classList.add("show-message");
 
-      if (!trexModel.getAttribute("src")) {
-        trexModel.src = trexModel.dataset.src;
-      }
+      /*
+        Libera a memória utilizada pelo vídeo antes
+        de abrir o modelo 3D. Isso ajuda em celulares.
+      */
+      video.pause();
+      video.removeAttribute("src");
+      video.preload = "none";
+      video.load();
+
+      /*
+        O modelo só é carregado depois que o vídeo
+        já foi removido da memória.
+      */
+      setTimeout(() => {
+        if(!trexModel.getAttribute("src")){
+          trexModel.src = trexModel.dataset.src;
+        }
+      }, 200);
 
       setTimeout(() => {
         experience.classList.remove("show-message");
@@ -351,7 +404,6 @@
     video.addEventListener("ended", showModel);
 
     skipButton.addEventListener("click", () => {
-      video.pause();
       showModel();
     });
   </script>
