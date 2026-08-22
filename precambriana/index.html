@@ -207,7 +207,10 @@
     }
 
     @media(max-width:600px){
-      .page{width:calc(100% - 10px);padding-top:10px}
+      .page{
+        width:calc(100% - 10px);
+        padding-top:10px;
+      }
 
       .experience,
       video,
@@ -215,7 +218,9 @@
         min-height:500px;
       }
 
-      .summary{padding:0 12px}
+      .summary{
+        padding:0 12px;
+      }
     }
   </style>
 </head>
@@ -224,16 +229,30 @@
   <main class="page">
     <h1>Pré-Cambriana</h1>
 
-    <div class="period">4,6 bilhões a 541 milhões de anos atrás</div>
+    <div class="period">
+      4,6 bilhões a 541 milhões de anos atrás
+    </div>
 
     <p class="summary">
       Foi nesse período que a Terra se formou, surgiram os oceanos,
-      a atmosfera começou a receber oxigênio e apareceram as primeiras formas de vida.
+      a atmosfera começou a receber oxigênio e apareceram as primeiras
+      formas de vida.
     </p>
 
     <section class="experience" id="experience">
-      <button class="ctrl-btn audio-btn" id="audioButton" type="button">🔇 Som</button>
-      <button class="ctrl-btn skip" id="skipButton" type="button">Pular vídeo</button>
+      <button
+        class="ctrl-btn audio-btn"
+        id="audioButton"
+        type="button">
+        🔇 Som
+      </button>
+
+      <button
+        class="ctrl-btn skip"
+        id="skipButton"
+        type="button">
+        Pular vídeo
+      </button>
 
       <div class="media-layer" id="videoLayer">
         <video
@@ -251,7 +270,7 @@
           id="dickinsoniaModel"
           class="model-frame"
           title="Modelo 3D de Dickinsonia costata"
-          data-src="https://sketchfab.com/models/b84b56b827834ed1801e5bf87a6e2732/embed?autostart=1"
+          data-src="https://sketchfab.com/models/b84b56b827834ed1801e5bf87a6e2732/embed?autostart=1&amp;ui_stop=0&amp;ui_share=0"
           allow="autoplay; fullscreen; xr-spatial-tracking"
           allowfullscreen>
         </iframe>
@@ -263,16 +282,24 @@
       </div>
 
       <div class="transition-message">
-        Agora explore em 3D a Dickinsonia, um dos animais mais antigos já conhecidos.
+        Agora explore em 3D a Dickinsonia, um dos animais mais antigos
+        já conhecidos.
       </div>
     </section>
 
     <div class="buttons">
-      <a class="button secondary" href="../index.html">🏠 Página inicial</a>
-      <a class="button secondary" href="../paleozoica/index.html">➡ Próxima era</a>
+      <a class="button secondary" href="../index.html">
+        🏠 Página inicial
+      </a>
+
+      <a class="button secondary" href="../paleozoica/index.html">
+        ➡ Próxima era
+      </a>
     </div>
 
-    <footer>Projeto Dinovadores · FESC · Objetivo Mogi</footer>
+    <footer>
+      Projeto Dinovadores · FESC · Objetivo Mogi
+    </footer>
   </main>
 
   <script>
@@ -280,7 +307,8 @@
     const video = document.getElementById("eraVideo");
     const skipButton = document.getElementById("skipButton");
     const audioButton = document.getElementById("audioButton");
-    const dickinsoniaModel = document.getElementById("dickinsoniaModel");
+    const dickinsoniaModel =
+      document.getElementById("dickinsoniaModel");
 
     let transitionStarted = false;
 
@@ -300,14 +328,15 @@
       transitionStarted = true;
       experience.classList.add("show-message");
 
-      // Carrega o modelo online somente quando o vídeo termina ou é pulado.
       if (!dickinsoniaModel.getAttribute("src")) {
-        dickinsoniaModel.src = dickinsoniaModel.dataset.src;
+        dickinsoniaModel.src =
+          dickinsoniaModel.dataset.src;
       }
 
       setTimeout(() => {
         experience.classList.remove("show-message");
         experience.classList.add("show-model");
+
         skipButton.style.display = "none";
         audioButton.style.display = "none";
       }, 1200);
