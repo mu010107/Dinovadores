@@ -189,11 +189,6 @@
       pointer-events:none;
     }
 
-    /*
-      Este botão fica fora do site do Sketchfab.
-      Por isso ele continua funcionando mesmo quando
-      o visualizador apresenta erro.
-    */
     .fallback-trigger{
       position:absolute;
       top:15px;
@@ -389,9 +384,9 @@
         <iframe
           class="sketchfab-frame"
           id="mammothFrame"
-          title="Modelo tridimensional animado de um mamute"
+          title="Modelo tridimensional realista de um mamute-lanoso"
           src="about:blank"
-          data-src="https://sketchfab.com/models/41cec47f5a354e15b8ea8d82e0e3a2fd/embed?autostart=1&amp;animation_autoplay=1&amp;camera=0&amp;max_texture_size=512&amp;ui_animations=0&amp;ui_annotations=0&amp;ui_help=0&amp;ui_hint=0&amp;ui_infos=0&amp;ui_inspector=0&amp;ui_settings=0&amp;ui_share=0&amp;ui_stop=0&amp;ui_vr=0&amp;ui_watermark_link=0"
+          data-src="https://sketchfab.com/models/d083b8023d694f40920411f16d3cc7b7/embed?autostart=1&amp;autospin=0.08&amp;camera=0&amp;max_texture_size=512&amp;ui_animations=0&amp;ui_annotations=0&amp;ui_help=0&amp;ui_hint=0&amp;ui_infos=0&amp;ui_inspector=0&amp;ui_settings=0&amp;ui_share=0&amp;ui_stop=0&amp;ui_vr=0&amp;ui_watermark_link=0"
           allow="autoplay; fullscreen; xr-spatial-tracking"
           allowfullscreen>
         </iframe>
@@ -406,7 +401,7 @@
 
         <div class="model-hint" id="modelHint">
           Arraste para girar e faça o gesto de pinça para aproximar.
-          Modelo 3D animado disponibilizado por rkuhlf.
+          Modelo 3D realista disponibilizado por Iofry.
         </div>
 
         <div
@@ -543,7 +538,7 @@
       try{
         localStorage.setItem(FALLBACK_KEY, "1");
       }catch(error){
-        // O site continua funcionando mesmo sem localStorage.
+        // Continua funcionando mesmo sem localStorage.
       }
     }
 
@@ -551,7 +546,7 @@
       try{
         localStorage.removeItem(FALLBACK_KEY);
       }catch(error){
-        // O site continua funcionando mesmo sem localStorage.
+        // Continua funcionando mesmo sem localStorage.
       }
     }
 
@@ -563,9 +558,6 @@
       mammothFrame.hidden = true;
       fallbackLayer.hidden = false;
 
-      /*
-        Interrompe o Sketchfab para liberar memória do aparelho.
-      */
       mammothFrame.src = "about:blank";
 
       if(rememberChoice){
@@ -577,18 +569,11 @@
       fallbackLayer.hidden = true;
       fallbackButton.hidden = true;
 
-      /*
-        Se o visitante já escolheu a imagem neste aparelho,
-        ela será usada automaticamente nas próximas visitas.
-      */
       if(prefersFallback()){
         showFallback(false);
         return;
       }
 
-      /*
-        Teste inicial para aparelhos sem suporte adequado a WebGL.
-      */
       if(!supportsSketchfabWebGL()){
         showFallback(false);
         return;
@@ -598,11 +583,6 @@
       modelHint.hidden = false;
       mammothFrame.src = mammothFrame.dataset.src;
 
-      /*
-        Depois de alguns segundos, verificamos novamente.
-        Se não for possível confirmar o erro automaticamente,
-        mostramos um botão manual fora do Sketchfab.
-      */
       modelCheckTimer = setTimeout(() => {
         if(!supportsSketchfabWebGL()){
           showFallback(false);
@@ -666,11 +646,6 @@
       showFallback(false);
     });
 
-    /*
-      Alguns erros enviados pelo Sketchfab podem ser detectados
-      por mensagem. Como o visualizador pertence a outro site,
-      essa detecção é complementar ao botão manual.
-    */
     window.addEventListener("message", event => {
       if(!event.origin.includes("sketchfab.com")){
         return;
