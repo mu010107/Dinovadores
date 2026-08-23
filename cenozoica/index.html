@@ -200,7 +200,11 @@
       padding:10px 14px;
       border:1px solid rgba(255,255,255,.30);
       border-radius:999px;
-      background:linear-gradient(135deg,var(--accent2),var(--accent));
+      background:linear-gradient(
+        135deg,
+        var(--accent2),
+        var(--accent)
+      );
       color:#ffffff;
       font-size:.82rem;
       font-weight:900;
@@ -386,7 +390,6 @@
           id="mammothFrame"
           title="Modelo tridimensional realista de um mamute-lanoso"
           src="about:blank"
-          data-src="https://sketchfab.com/models/d083b8023d694f40920411f16d3cc7b7/embed?autostart=1&amp;autospin=0.08&amp;camera=0&amp;max_texture_size=512&amp;ui_animations=0&amp;ui_annotations=0&amp;ui_help=0&amp;ui_hint=0&amp;ui_infos=0&amp;ui_inspector=0&amp;ui_settings=0&amp;ui_share=0&amp;ui_stop=0&amp;ui_vr=0&amp;ui_watermark_link=0"
           allow="autoplay; fullscreen; xr-spatial-tracking"
           allowfullscreen>
         </iframe>
@@ -463,6 +466,8 @@
     </footer>
   </main>
 
+  <script src="https://static.sketchfab.com/api/sketchfab-viewer-1.12.1.js"></script>
+
   <script>
     const experience = document.getElementById("experience");
     const video = document.getElementById("eraVideo");
@@ -475,7 +480,23 @@
     const fallbackLayer = document.getElementById("fallbackLayer");
     const retryButton = document.getElementById("retryButton");
 
-    const FALLBACK_KEY = "dinovadores_cenozoica_imagem";
+    const MODEL_UID = "d083b8023d694f40920411f16d3cc7b7";
+
+    /*
+      Quanto maior este número, menor o mamute aparecerá.
+
+      1.20 = um pouco menor
+      1.25 = tamanho atual
+      1.35 = menor
+      1.50 = bem menor
+    */
+    const CAMERA_DISTANCE = 1.25;
+
+    /*
+      O V2 faz o navegador testar novamente o novo mamute,
+      mesmo que a imagem de segurança tenha sido usada antes.
+    */
+    const FALLBACK_KEY = "dinovadores_cenozoica_imagem_v2";
 
     let transitionStarted = false;
     let modelCheckTimer;
@@ -558,11 +579,45 @@
       mammothFrame.hidden = true;
       fallbackLayer.hidden = false;
 
+      /*
+        Interrompe o Sketchfab e libera memória do celular.
+      */
       mammothFrame.src = "about:blank";
 
       if(rememberChoice){
         rememberFallback();
       }
+    }
+
+    function moveCameraAway(api){
+      api.getCameraLookAt(function(error, camera){
+        if(error || !camera){
+          return;
+        }
+
+        const position = camera.position;
+        const target = camera.target;
+
+        /*
+          Mantém o mesmo ângulo e afasta a câmera do mamute.
+        */
+        const fartherPosition = [
+          target[0] +
+            (position[0] - target[0]) * CAMERA_DISTANCE,
+
+          target[1] +
+            (position[1] - target[1]) * CAMERA_DISTANCE,
+
+          target[2] +
+            (position[2] - target[2]) * CAMERA_DISTANCE
+        ];
+
+        api.setCameraLookAt(
+          fartherPosition,
+          target,
+          0.8
+        );
+      });
     }
 
     function loadMammothModel(){
@@ -579,21 +634,71 @@
         return;
       }
 
+      if(typeof Sketchfab === "undefined"){
+        showFallback(false);
+        return;
+      }
+
       mammothFrame.hidden = false;
       modelHint.hidden = false;
-      mammothFrame.src = mammothFrame.dataset.src;
+      mammothFrame.src = "about:blank";
 
-      modelCheckTimer = setTimeout(() => {
-        if(!supportsSketchfabWebGL()){
+      const client = new Sketchfab(
+        "1.12.1",
+        mammothFrame
+      );
+
+      client.init(MODEL_UID, {
+        autostart:1,
+        autospin:0.08,
+        camera:0,
+        max_texture_size:512,
+
+        ui_animations:0,
+        ui_annotations:0,
+        ui_help:0,
+        ui_hint:0,
+        ui_infos:0,
+        ui_inspector:0,
+        ui_settings:0,
+        ui_share:0,
+        ui_stop:0,
+        ui_vr:0,
+        ui_watermark_link:0,
+
+        success:function(api){
+          api.start();
+
+          api.addEventListener(
+            "viewerready",
+            function(){
+              /*
+                Pequena espera para garantir que a câmera
+                original do modelo já esteja carregada.
+              */
+              setTimeout(function(){
+                moveCameraAway(api);
+              }, 250);
+            }
+          );
+        },
+
+        error:function(){
           showFallback(false);
-          return;
         }
+      });
 
+      /*
+        O botão manual aparece depois de 5 segundos.
+        Ele continuará funcionando mesmo se o erro estiver
+        dentro da janela do Sketchfab.
+      */
+      modelCheckTimer = setTimeout(function(){
         fallbackButton.hidden = false;
       }, 5000);
     }
 
-    audioButton.addEventListener("click", () => {
+    audioButton.addEventListener("click", function(){
       video.muted = !video.muted;
 
       audioButton.textContent = video.muted
@@ -609,7 +714,7 @@
       transitionStarted = true;
       experience.classList.add("show-message");
 
-      setTimeout(() => {
+      setTimeout(function(){
         experience.classList.remove("show-message");
         experience.classList.add("show-model");
 
@@ -618,35 +723,37 @@
 
         video.pause();
 
-        setTimeout(loadMammothModel, 200);
+        setTimeout(function(){
+          loadMammothModel();
+        }, 200);
       }, 1200);
     }
 
     video.addEventListener("ended", showModel);
 
-    video.addEventListener("error", () => {
+    video.addEventListener("error", function(){
       skipButton.textContent = "Ver mamute";
     });
 
-    skipButton.addEventListener("click", () => {
+    skipButton.addEventListener("click", function(){
       video.pause();
       showModel();
     });
 
-    fallbackButton.addEventListener("click", () => {
+    fallbackButton.addEventListener("click", function(){
       showFallback(true);
     });
 
-    retryButton.addEventListener("click", () => {
+    retryButton.addEventListener("click", function(){
       clearFallbackPreference();
       loadMammothModel();
     });
 
-    mammothFrame.addEventListener("error", () => {
+    mammothFrame.addEventListener("error", function(){
       showFallback(false);
     });
 
-    window.addEventListener("message", event => {
+    window.addEventListener("message", function(event){
       if(!event.origin.includes("sketchfab.com")){
         return;
       }
