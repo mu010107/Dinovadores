@@ -1,1 +1,699 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#030912">
 
+  <title>Cenozoica | Dinovadores</title>
+
+  <style>
+    :root{
+      --bg:#030912;
+      --panel:#071522;
+      --text:#ffffff;
+      --muted:#d4dee8;
+      --accent:#3ab8ff;
+      --accent2:#0068ad;
+      --radius:22px;
+    }
+
+    *{
+      box-sizing:border-box;
+    }
+
+    [hidden]{
+      display:none !important;
+    }
+
+    body{
+      margin:0;
+      min-height:100vh;
+      background:
+        radial-gradient(
+          circle at 50% 0%,
+          rgba(0,132,220,.22),
+          transparent 28rem
+        ),
+        var(--bg);
+      color:var(--text);
+      font-family:Arial,Helvetica,sans-serif;
+    }
+
+    .page{
+      width:min(760px, calc(100% - 16px));
+      margin:auto;
+      padding:18px 0 32px;
+      text-align:center;
+    }
+
+    h1{
+      margin:18px 0 10px;
+      font-size:clamp(2.7rem, 11vw, 5.3rem);
+      line-height:.95;
+      text-transform:uppercase;
+    }
+
+    .period{
+      color:#75d2ff;
+      font-size:clamp(1rem, 4vw, 1.35rem);
+      font-weight:800;
+    }
+
+    .summary{
+      max-width:650px;
+      margin:22px auto 28px;
+      color:var(--muted);
+      font-size:1.05rem;
+      line-height:1.65;
+    }
+
+    .experience{
+      position:relative;
+      overflow:hidden;
+      min-height:520px;
+      border-radius:var(--radius);
+      background:var(--panel);
+      box-shadow:0 18px 50px rgba(0,0,0,.28);
+    }
+
+    .media-layer{
+      position:absolute;
+      inset:0;
+      width:100%;
+      height:100%;
+      transition:
+        opacity 1s ease,
+        visibility 1s ease;
+    }
+
+    video,
+    .sketchfab-frame{
+      display:block;
+      width:100%;
+      height:100%;
+      min-height:520px;
+      border:0;
+      background:#071522;
+    }
+
+    video{
+      object-fit:cover;
+    }
+
+    #videoLayer{
+      opacity:1;
+      visibility:visible;
+      z-index:2;
+    }
+
+    #modelLayer{
+      opacity:0;
+      visibility:hidden;
+      z-index:1;
+    }
+
+    .experience.show-model #videoLayer{
+      opacity:0;
+      visibility:hidden;
+      pointer-events:none;
+    }
+
+    .experience.show-model #modelLayer{
+      opacity:1;
+      visibility:visible;
+      z-index:3;
+    }
+
+    .transition-message{
+      position:absolute;
+      left:50%;
+      bottom:24px;
+      transform:translateX(-50%);
+      z-index:10;
+      width:calc(100% - 32px);
+      padding:13px 16px;
+      border-radius:15px;
+      background:rgba(3,9,18,.84);
+      color:#ffffff;
+      font-weight:700;
+      opacity:0;
+      transition:opacity .7s ease;
+      pointer-events:none;
+    }
+
+    .experience.show-message .transition-message{
+      opacity:1;
+    }
+
+    .ctrl-btn{
+      position:absolute;
+      top:14px;
+      z-index:12;
+      display:flex;
+      align-items:center;
+      gap:6px;
+      padding:9px 13px;
+      border:1px solid rgba(255,255,255,.22);
+      border-radius:999px;
+      background:rgba(3,9,18,.72);
+      color:#ffffff;
+      font-size:.85rem;
+      font-weight:800;
+      cursor:pointer;
+      backdrop-filter:blur(6px);
+      -webkit-backdrop-filter:blur(6px);
+    }
+
+    .skip{
+      right:14px;
+    }
+
+    .audio-btn{
+      left:14px;
+    }
+
+    .model-hint{
+      position:absolute;
+      left:50%;
+      bottom:46px;
+      transform:translateX(-50%);
+      z-index:7;
+      width:calc(100% - 58px);
+      padding:12px 14px;
+      border-radius:16px;
+      background:rgba(3,9,18,.82);
+      color:#e7f4ff;
+      font-size:.9rem;
+      line-height:1.35;
+      pointer-events:none;
+    }
+
+    /*
+      Este botão fica fora do site do Sketchfab.
+      Por isso ele continua funcionando mesmo quando
+      o visualizador apresenta erro.
+    */
+    .fallback-trigger{
+      position:absolute;
+      top:15px;
+      left:50%;
+      transform:translateX(-50%);
+      z-index:14;
+      width:max-content;
+      max-width:calc(100% - 160px);
+      padding:10px 14px;
+      border:1px solid rgba(255,255,255,.30);
+      border-radius:999px;
+      background:linear-gradient(135deg,var(--accent2),var(--accent));
+      color:#ffffff;
+      font-size:.82rem;
+      font-weight:900;
+      cursor:pointer;
+      box-shadow:0 6px 18px rgba(0,0,0,.30);
+    }
+
+    .fallback-layer{
+      position:absolute;
+      inset:0;
+      z-index:20;
+      overflow:hidden;
+      background:#071522;
+    }
+
+    .fallback-image{
+      display:block;
+      width:100%;
+      height:100%;
+      min-height:520px;
+      object-fit:cover;
+      object-position:center;
+    }
+
+    .fallback-info{
+      position:absolute;
+      left:50%;
+      bottom:18px;
+      transform:translateX(-50%);
+      width:calc(100% - 38px);
+      padding:14px;
+      border-radius:17px;
+      background:rgba(3,9,18,.88);
+      color:#ffffff;
+      line-height:1.35;
+      box-shadow:0 10px 30px rgba(0,0,0,.28);
+    }
+
+    .fallback-info strong{
+      display:block;
+      color:#7bd5ff;
+      margin-bottom:5px;
+    }
+
+    .fallback-credit{
+      display:block;
+      margin-top:7px;
+      color:#b9d5e8;
+      font-size:.76rem;
+    }
+
+    .fallback-credit a{
+      color:#75d2ff;
+    }
+
+    .retry-button{
+      margin-top:11px;
+      padding:10px 14px;
+      border:1px solid rgba(117,210,255,.55);
+      border-radius:999px;
+      background:#082238;
+      color:#ffffff;
+      font-weight:800;
+      cursor:pointer;
+    }
+
+    .buttons{
+      display:grid;
+      gap:12px;
+      margin-top:18px;
+    }
+
+    .button{
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      min-height:58px;
+      padding:14px;
+      border:0;
+      border-radius:16px;
+      color:#ffffff;
+      text-decoration:none;
+      font-weight:900;
+      background:linear-gradient(
+        135deg,
+        var(--accent2),
+        var(--accent)
+      );
+    }
+
+    .button.secondary{
+      background:#07131f;
+      border:1px solid rgba(58,184,255,.34);
+    }
+
+    footer{
+      padding:24px 0 0;
+      color:#71889a;
+      font-size:.84rem;
+    }
+
+    @media(max-width:600px){
+      .page{
+        width:calc(100% - 10px);
+        padding-top:10px;
+      }
+
+      .experience,
+      video,
+      .sketchfab-frame,
+      .fallback-image{
+        min-height:500px;
+      }
+
+      .summary{
+        padding:0 12px;
+      }
+
+      .fallback-trigger{
+        max-width:calc(100% - 130px);
+        padding:9px 11px;
+        font-size:.76rem;
+      }
+
+      .model-hint{
+        bottom:44px;
+        width:calc(100% - 46px);
+        font-size:.85rem;
+      }
+
+      .fallback-info{
+        width:calc(100% - 28px);
+        font-size:.88rem;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <main class="page">
+    <h1>Cenozoica</h1>
+
+    <div class="period">
+      66 milhões de anos atrás até os dias atuais
+    </div>
+
+    <p class="summary">
+      Foi nesse período que os mamíferos se diversificaram,
+      os continentes ganharam suas formas atuais e surgiram
+      os seres humanos. Nas regiões geladas, grandes mamutes
+      percorreram vastas paisagens.
+    </p>
+
+    <section class="experience" id="experience">
+      <button
+        class="ctrl-btn audio-btn"
+        id="audioButton"
+        type="button">
+        🔇 Som
+      </button>
+
+      <button
+        class="ctrl-btn skip"
+        id="skipButton"
+        type="button">
+        Pular vídeo
+      </button>
+
+      <div class="media-layer" id="videoLayer">
+        <video
+          id="eraVideo"
+          src="cenozoica.mp4"
+          autoplay
+          muted
+          playsinline
+          preload="metadata">
+        </video>
+      </div>
+
+      <div class="media-layer" id="modelLayer">
+        <iframe
+          class="sketchfab-frame"
+          id="mammothFrame"
+          title="Modelo tridimensional animado de um mamute"
+          src="about:blank"
+          data-src="https://sketchfab.com/models/41cec47f5a354e15b8ea8d82e0e3a2fd/embed?autostart=1&amp;animation_autoplay=1&amp;camera=0&amp;max_texture_size=512&amp;ui_animations=0&amp;ui_annotations=0&amp;ui_help=0&amp;ui_hint=0&amp;ui_infos=0&amp;ui_inspector=0&amp;ui_settings=0&amp;ui_share=0&amp;ui_stop=0&amp;ui_vr=0&amp;ui_watermark_link=0"
+          allow="autoplay; fullscreen; xr-spatial-tracking"
+          allowfullscreen>
+        </iframe>
+
+        <button
+          class="fallback-trigger"
+          id="fallbackButton"
+          type="button"
+          hidden>
+          ⚠️ 3D não abriu? Ver imagem
+        </button>
+
+        <div class="model-hint" id="modelHint">
+          Arraste para girar e faça o gesto de pinça para aproximar.
+          Modelo 3D animado disponibilizado por rkuhlf.
+        </div>
+
+        <div
+          class="fallback-layer"
+          id="fallbackLayer"
+          hidden>
+
+          <img
+            class="fallback-image"
+            src="https://upload.wikimedia.org/wikipedia/commons/6/68/Mammoth_model_I.JPG"
+            alt="Reconstrução em tamanho real de um mamute-lanoso"
+            referrerpolicy="no-referrer">
+
+          <div class="fallback-info">
+            <strong>Imagem de segurança ativada</strong>
+
+            O navegador deste aparelho não conseguiu exibir o
+            mamute em 3D. Por isso mostramos uma reconstrução
+            do animal.
+
+            <small class="fallback-credit">
+              Imagem: HTO e Millenium187 · domínio público ·
+              <a
+                href="https://commons.wikimedia.org/wiki/File:Mammoth_model_I.JPG"
+                target="_blank"
+                rel="noopener">
+                Wikimedia Commons
+              </a>
+            </small>
+
+            <button
+              class="retry-button"
+              id="retryButton"
+              type="button">
+              🔄 Tentar abrir o 3D novamente
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="transition-message">
+        Agora observe um dos gigantes que atravessaram
+        as paisagens geladas da Era do Gelo.
+      </div>
+    </section>
+
+    <div class="buttons">
+      <a class="button secondary" href="../index.html">
+        🏠 Página inicial
+      </a>
+
+      <a class="button secondary" href="../mesozoica/index.html">
+        ⬅ Era anterior
+      </a>
+    </div>
+
+    <footer>
+      Projeto Dinovadores · FESC · Objetivo Mogi
+    </footer>
+  </main>
+
+  <script>
+    const experience = document.getElementById("experience");
+    const video = document.getElementById("eraVideo");
+    const skipButton = document.getElementById("skipButton");
+    const audioButton = document.getElementById("audioButton");
+
+    const mammothFrame = document.getElementById("mammothFrame");
+    const modelHint = document.getElementById("modelHint");
+    const fallbackButton = document.getElementById("fallbackButton");
+    const fallbackLayer = document.getElementById("fallbackLayer");
+    const retryButton = document.getElementById("retryButton");
+
+    const FALLBACK_KEY = "dinovadores_cenozoica_imagem";
+
+    let transitionStarted = false;
+    let modelCheckTimer;
+
+    function supportsSketchfabWebGL(){
+      try{
+        const canvas = document.createElement("canvas");
+
+        const options = {
+          alpha:false,
+          antialias:false,
+          failIfMajorPerformanceCaveat:true
+        };
+
+        const gl =
+          canvas.getContext("webgl", options) ||
+          canvas.getContext("experimental-webgl", options);
+
+        if(!gl){
+          return false;
+        }
+
+        const vertexPrecision = gl.getShaderPrecisionFormat(
+          gl.VERTEX_SHADER,
+          gl.HIGH_FLOAT
+        );
+
+        const fragmentPrecision = gl.getShaderPrecisionFormat(
+          gl.FRAGMENT_SHADER,
+          gl.HIGH_FLOAT
+        );
+
+        const compatible =
+          vertexPrecision &&
+          fragmentPrecision &&
+          vertexPrecision.precision > 0 &&
+          fragmentPrecision.precision > 0;
+
+        const loseContext = gl.getExtension("WEBGL_lose_context");
+
+        if(loseContext){
+          loseContext.loseContext();
+        }
+
+        return Boolean(compatible);
+      }catch(error){
+        return false;
+      }
+    }
+
+    function prefersFallback(){
+      try{
+        return localStorage.getItem(FALLBACK_KEY) === "1";
+      }catch(error){
+        return false;
+      }
+    }
+
+    function rememberFallback(){
+      try{
+        localStorage.setItem(FALLBACK_KEY, "1");
+      }catch(error){
+        // O site continua funcionando mesmo sem localStorage.
+      }
+    }
+
+    function clearFallbackPreference(){
+      try{
+        localStorage.removeItem(FALLBACK_KEY);
+      }catch(error){
+        // O site continua funcionando mesmo sem localStorage.
+      }
+    }
+
+    function showFallback(rememberChoice = false){
+      clearTimeout(modelCheckTimer);
+
+      fallbackButton.hidden = true;
+      modelHint.hidden = true;
+      mammothFrame.hidden = true;
+      fallbackLayer.hidden = false;
+
+      /*
+        Interrompe o Sketchfab para liberar memória do aparelho.
+      */
+      mammothFrame.src = "about:blank";
+
+      if(rememberChoice){
+        rememberFallback();
+      }
+    }
+
+    function loadMammothModel(){
+      fallbackLayer.hidden = true;
+      fallbackButton.hidden = true;
+
+      /*
+        Se o visitante já escolheu a imagem neste aparelho,
+        ela será usada automaticamente nas próximas visitas.
+      */
+      if(prefersFallback()){
+        showFallback(false);
+        return;
+      }
+
+      /*
+        Teste inicial para aparelhos sem suporte adequado a WebGL.
+      */
+      if(!supportsSketchfabWebGL()){
+        showFallback(false);
+        return;
+      }
+
+      mammothFrame.hidden = false;
+      modelHint.hidden = false;
+      mammothFrame.src = mammothFrame.dataset.src;
+
+      /*
+        Depois de alguns segundos, verificamos novamente.
+        Se não for possível confirmar o erro automaticamente,
+        mostramos um botão manual fora do Sketchfab.
+      */
+      modelCheckTimer = setTimeout(() => {
+        if(!supportsSketchfabWebGL()){
+          showFallback(false);
+          return;
+        }
+
+        fallbackButton.hidden = false;
+      }, 5000);
+    }
+
+    audioButton.addEventListener("click", () => {
+      video.muted = !video.muted;
+
+      audioButton.textContent = video.muted
+        ? "🔇 Som"
+        : "🔊 Som";
+    });
+
+    function showModel(){
+      if(transitionStarted){
+        return;
+      }
+
+      transitionStarted = true;
+      experience.classList.add("show-message");
+
+      setTimeout(() => {
+        experience.classList.remove("show-message");
+        experience.classList.add("show-model");
+
+        skipButton.style.display = "none";
+        audioButton.style.display = "none";
+
+        video.pause();
+
+        setTimeout(loadMammothModel, 200);
+      }, 1200);
+    }
+
+    video.addEventListener("ended", showModel);
+
+    video.addEventListener("error", () => {
+      skipButton.textContent = "Ver mamute";
+    });
+
+    skipButton.addEventListener("click", () => {
+      video.pause();
+      showModel();
+    });
+
+    fallbackButton.addEventListener("click", () => {
+      showFallback(true);
+    });
+
+    retryButton.addEventListener("click", () => {
+      clearFallbackPreference();
+      loadMammothModel();
+    });
+
+    mammothFrame.addEventListener("error", () => {
+      showFallback(false);
+    });
+
+    /*
+      Alguns erros enviados pelo Sketchfab podem ser detectados
+      por mensagem. Como o visualizador pertence a outro site,
+      essa detecção é complementar ao botão manual.
+    */
+    window.addEventListener("message", event => {
+      if(!event.origin.includes("sketchfab.com")){
+        return;
+      }
+
+      let messageText = "";
+
+      try{
+        messageText =
+          typeof event.data === "string"
+            ? event.data
+            : JSON.stringify(event.data);
+      }catch(error){
+        return;
+      }
+
+      const webglError =
+        /3d\/webgl context error|webgl context error|context.?lost|failed to (create|initialize).*webgl|error.*rendering/i;
+
+      if(webglError.test(messageText)){
+        showFallback(false);
+      }
+    });
+  </script>
+</body>
+</html>
