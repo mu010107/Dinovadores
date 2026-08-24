@@ -508,7 +508,6 @@
     if (navigator.vibrate) {
       navigator.vibrate(25);
     }
-  }
 
   function holdTick(now) {
     if (!holding || scannerRevealed) {
