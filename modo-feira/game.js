@@ -1,13 +1,15 @@
 (function () {
   "use strict";
 
+  const NORMAL_CARD_IMAGE = "assets/carta-normal.png";
+
   const fossils = [
     {
       id: "dickinsonia",
       name: "Dickinsonia",
       era: "precambriana",
       eraName: "Pré-Cambriana",
-      image: "assets/dickinsonia.png",
+      uvImage: "assets/carta-uv-dickinsonia.png",
       href: "../precambriana/",
       color: "#b96cff",
       fact: "Viveu nos mares do Ediacarano, antes do surgimento de animais com esqueletos e conchas duras.",
@@ -21,7 +23,7 @@
       name: "Trilobita",
       era: "paleozoica",
       eraName: "Paleozoica",
-      image: "assets/trilobita.png",
+      uvImage: "assets/carta-uv-trilobita.png",
       href: "../paleozoica/",
       color: "#39ef8e",
       fact: "Foi um artrópode marinho de carapaça segmentada e um dos fósseis mais conhecidos dos oceanos paleozoicos.",
@@ -35,7 +37,7 @@
       name: "Tyrannosaurus rex",
       era: "mesozoica",
       eraName: "Mesozoica",
-      image: "assets/trex.png",
+      uvImage: "assets/carta-uv-trex.png",
       href: "../mesozoica/",
       color: "#ff9b4a",
       fact: "Viveu no final do Cretáceo, entre aproximadamente 68 e 66 milhões de anos atrás.",
@@ -49,7 +51,7 @@
       name: "Mamute-lanoso",
       era: "cenozoica",
       eraName: "Cenozoica",
-      image: "assets/mamute.png",
+      uvImage: "assets/carta-uv-mamute.png",
       href: "../cenozoica/",
       color: "#3ab8ff",
       fact: "Conviveu com seres humanos durante o período glacial e era adaptado a ambientes muito frios.",
@@ -73,6 +75,21 @@
     mesozoica: 82,
     cenozoica: 94
   };
+
+  /*
+   * Pré-carrega as imagens para a revelação UV
+   * acontecer sem piscar ou ficar em branco.
+   */
+  [NORMAL_CARD_IMAGE]
+    .concat(
+      fossils.map(function (fossil) {
+        return fossil.uvImage;
+      })
+    )
+    .forEach(function (source) {
+      const image = new Image();
+      image.src = source;
+    });
 
   const screenButtons = document.querySelectorAll("[data-open-screen]");
   const screens = document.querySelectorAll(".screen");
@@ -455,8 +472,12 @@
 
     currentFossil = rounds[roundIndex];
 
+    /*
+     * Antes do escaneamento, todas as cartas
+     * mostram exatamente a mesma arte normal.
+     */
     fossilCard.style.backgroundImage =
-      "url('" + currentFossil.image + "')";
+      "url('" + NORMAL_CARD_IMAGE + "')";
 
     fossilCard.setAttribute(
       "aria-label",
@@ -600,9 +621,17 @@
       "Fóssil revelado!";
 
     uvButton.querySelector("small").textContent =
-      "agora classifique a descoberta";
+      "observe antes de classificar";
 
     uvDevice.classList.remove("is-scanning");
+
+    /*
+     * Somente agora a imagem normal é trocada
+     * pela carta UV correspondente ao fóssil.
+     */
+    fossilCard.style.backgroundImage =
+      "url('" + currentFossil.uvImage + "')";
+
     uvDevice.classList.add("is-revealed");
 
     fossilCard.setAttribute(
@@ -622,8 +651,9 @@
     }
 
     /*
-     * Não movimentar a tela neste momento.
-     * A pessoa observa o fóssil e desce quando estiver pronta.
+     * Não há scroll automático aqui.
+     * A tela permanece parada para a pessoa
+     * conseguir observar e entender o fóssil.
      */
   }
 
