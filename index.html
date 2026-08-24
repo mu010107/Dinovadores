@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Projeto Dinovadores</title>
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+}
+
+body{
+
+font-family:Arial,Helvetica,sans-serif;
+
+background:
+linear-gradient(180deg,#111426,#05070a);
+
+color:white;
+
+}
+
+header{
+
+padding:40px 20px 35px;
+
+text-align:center;
+
+}
+
+header h2{
+
+color:#cda7ff;
+
+letter-spacing:6px;
+
+font-size:18px;
+
+margin-bottom:18px;
+
+}
+
+header h1{
+
+display:flex;
+
+flex-direction:column;
+
+align-items:center;
+
+line-height:1;
+
+font-size:56px;
+
+font-weight:900;
+
+text-transform:uppercase;
+
+}
+
+header p{
+
+margin-top:25px;
+
+font-size:24px;
+
+line-height:1.5;
+
+color:#d0d0d0;
+
+max-width:900px;
+
+margin-left:auto;
+
+margin-right:auto;
+
+}
+
+.linha{
+
+width:320px;
+
+height:1px;
+
+background:#6d5b94;
+
+margin:30px auto;
+
+opacity:.5;
+
+}
+
+main{
+
+width:95%;
+
+max-width:1200px;
+
+margin:auto;
+
+padding-bottom:50px;
+
+}
+
+.card{
+
+display:block;
+
+margin-bottom:25px;
+
+border-radius:24px;
+
+overflow:hidden;
+
+border:1px solid rgba(255,255,255,.15);
+
+transition:.25s;
+
+}
+
+.card:hover{
+
+transform:scale(1.01);
+
+}
+
+.card img{
+
+display:block;
+
+width:100%;
+
+height:auto;
+
+}
+
+.fair-mode{
+
+position:relative;
+
+overflow:hidden;
+
+margin-bottom:38px;
+
+padding:clamp(26px,6vw,58px);
+
+border:1px solid rgba(185,108,255,.36);
+
+border-radius:28px;
+
+background:
+radial-gradient(circle at 88% 18%,rgba(58,184,255,.22),transparent 19rem),
+radial-gradient(circle at 10% 100%,rgba(185,108,255,.27),transparent 22rem),
+linear-gradient(135deg,#181126,#0b101b);
+
+box-shadow:0 24px 70px rgba(0,0,0,.34);
+
+text-align:center;
+
+}
+
+.fair-kicker{
+
+color:#d8b8ff;
+
+font-size:13px;
+
+font-weight:900;
+
+letter-spacing:4px;
+
+}
+
+.fair-mode h2{
+
+margin:10px 0 14px;
+
+font-size:clamp(40px,8vw,72px);
+
+line-height:1;
+
+text-transform:uppercase;
+
+}
+
+.fair-mode p{
+
+max-width:700px;
+
+margin:0 auto;
+
+color:#d0d3db;
+
+font-size:clamp(17px,3vw,22px);
+
+line-height:1.55;
+
+}
+
+.fair-button{
+
+display:inline-flex;
+
+min-height:58px;
+
+align-items:center;
+
+justify-content:center;
+
+margin-top:24px;
+
+padding:14px 24px;
+
+border-radius:16px;
+
+background:linear-gradient(135deg,#7d2fe0,#b96cff);
+
+box-shadow:0 10px 28px rgba(125,47,224,.3);
+
+color:#fff;
+
+font-weight:900;
+
+text-decoration:none;
+
+}
+
+.fair-button:hover{
+
+transform:translateY(-2px);
+
+}
+
+.fair-colors{
+
+display:flex;
+
+width:180px;
+
+height:5px;
+
+margin:27px auto 0;
+
+overflow:hidden;
+
+border-radius:999px;
+
+}
+
+.fair-colors span{flex:1}
+.fair-colors span:nth-child(1){background:#b96cff}
+.fair-colors span:nth-child(2){background:#39ef8e}
+.fair-colors span:nth-child(3){background:#ff9b4a}
+.fair-colors span:nth-child(4){background:#3ab8ff}
+
+.eras-title{
+
+margin:0 0 20px;
+
+color:#e8eaf0;
+
+font-size:clamp(25px,5vw,38px);
+
+text-align:center;
+
+text-transform:uppercase;
+
+}
+
+@media(max-width:700px){
+
+header h1{
+
+font-size:48px;
+
+}
+
+header p{
+
+font-size:18px;
+
+}
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<header>
+
+<h2>PROJETO DINOVADORES</h2>
+
+<h1>
+
+<span>FESC</span>
+
+<span>OBJETIVO MOGI</span>
+
+</h1>
+
+<p>
+
+Uma jornada educativa pelas eras geológicas e pela evolução da vida na Terra.
+
+</p>
+
+<div class="linha"></div>
+
+</header>
+
+<main>
+
+<section class="fair-mode">
+
+<div class="fair-kicker">NOVA EXPERIÊNCIA INTERATIVA</div>
+
+<h2>Modo Feira</h2>
+
+<p>
+
+Use o Scanner UV para revelar fósseis escondidos e monte a Linha do Tempo da história da Terra.
+
+</p>
+
+<a class="fair-button" href="modo-feira/">🎮 Começar as missões</a>
+
+<div class="fair-colors" aria-hidden="true"><span></span><span></span><span></span><span></span></div>
+
+</section>
+
+<h2 class="eras-title">Explore as eras</h2>
+
+<a class="card" href="precambriana/">
+<img src="assets/precambriana.png" alt="Explorar a Era Pré-Cambriana">
+</a>
+
+<a class="card" href="paleozoica/">
+<img src="assets/paleozoica.png" alt="Explorar a Era Paleozoica">
+</a>
+
+<a class="card" href="mesozoica/">
+<img src="assets/mesozoica.png" alt="Explorar a Era Mesozoica">
+</a>
+
+<a class="card" href="cenozoica/">
+<img src="assets/cenozoica.png" alt="Explorar a Era Cenozoica">
+</a>
+
+</main>
+
+</body>
+
+</html>
