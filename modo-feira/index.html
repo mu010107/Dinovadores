@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#080b14">
+  <meta name="description" content="Duas missões interativas do Projeto Dinovadores: Scanner UV de fósseis e Linha do Tempo geológica.">
+  <title>Modo Feira | Dinovadores</title>
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+  <a class="skip-link" href="#conteudo">Pular para o conteúdo</a>
+
+  <header class="topbar">
+    <a class="brand" href="../index.html" aria-label="Voltar à página inicial do Dinovadores">
+      <span class="brand-mark" aria-hidden="true">D</span>
+      <span><strong>DINOVADORES</strong><small>Modo Feira</small></span>
+    </a>
+
+    <div class="top-actions">
+      <button class="icon-button" id="soundButton" type="button" aria-pressed="true" aria-label="Desativar sons">
+        <span aria-hidden="true">🔊</span>
+      </button>
+      <button class="icon-button" id="fullscreenButton" type="button" aria-label="Abrir em tela cheia">
+        <span aria-hidden="true">⛶</span>
+      </button>
+    </div>
+  </header>
+
+  <main id="conteudo">
+    <section class="screen is-active" id="hubScreen" aria-labelledby="hubTitle">
+      <div class="hero">
+        <div class="hero-copy">
+          <p class="eyebrow">FESC 2026 · OBJETIVO MOGI</p>
+          <h1 id="hubTitle">Escolha sua missão</h1>
+          <p>Investigue fósseis escondidos e descubra como 4,6 bilhões de anos cabem em uma única linha.</p>
+        </div>
+        <img src="assets/scanner-mesa.png" alt="Aluno usando o Scanner UV do projeto Dinovadores" width="1536" height="1024">
+      </div>
+
+      <div class="mission-grid" aria-label="Missões disponíveis">
+        <button class="mission-card scanner-card" type="button" data-open-screen="scannerScreen">
+          <span class="mission-number">MISSÃO 01</span>
+          <span class="mission-icon" aria-hidden="true">⌁</span>
+          <strong>Scanner UV</strong>
+          <span>Revele o fóssil secreto e descubra a qual era ele pertence.</span>
+          <b>Iniciar investigação <i aria-hidden="true">→</i></b>
+        </button>
+
+        <button class="mission-card timeline-card" type="button" data-open-screen="timelineScreen">
+          <span class="mission-number">MISSÃO 02</span>
+          <span class="mission-icon" aria-hidden="true">⌛</span>
+          <strong>Linha do Tempo</strong>
+          <span>Posicione as eras e revele quanto da história da Terra cada uma ocupa.</span>
+          <b>Viajar no tempo <i aria-hidden="true">→</i></b>
+        </button>
+      </div>
+
+      <p class="offline-note"><span aria-hidden="true">✓</span> Depois da primeira visita, o jogo também pode funcionar sem internet.</p>
+    </section>
+
+    <section class="screen" id="scannerScreen" aria-labelledby="scannerTitle" hidden>
+      <button class="back-button" type="button" data-open-screen="hubScreen">← Voltar às missões</button>
+
+      <div class="section-heading">
+        <p class="eyebrow purple">MISSÃO 01 · DETETIVE DO TEMPO</p>
+        <h2 id="scannerTitle">Scanner UV</h2>
+        <p>Escolha uma carta, mantenha o botão pressionado para revelar o fóssil e classifique-o na era correta.</p>
+      </div>
+
+      <div class="mission-progress" aria-label="Progresso da investigação">
+        <span>Descobertas</span>
+        <div class="progress-dots" id="scannerProgress" aria-hidden="true"></div>
+        <strong id="scannerProgressText">0/4</strong>
+      </div>
+
+      <div class="scanner-layout">
+        <section class="deck-panel" aria-labelledby="deckTitle">
+          <div class="panel-heading">
+            <span class="step-badge">1</span>
+            <div><h3 id="deckTitle">Escolha uma carta</h3><p>Qualquer uma pode esconder o próximo fóssil.</p></div>
+          </div>
+          <div class="card-deck" id="cardDeck" aria-label="Monte com 15 cartas"></div>
+        </section>
+
+        <section class="scanner-panel" aria-labelledby="scannerDeviceTitle">
+          <div class="panel-heading">
+            <span class="step-badge">2</span>
+            <div><h3 id="scannerDeviceTitle">Coloque no scanner</h3><p id="scannerInstruction">Primeiro, escolha uma carta do monte.</p></div>
+          </div>
+
+          <div class="uv-device" id="uvDevice">
+            <div class="device-bridge" aria-hidden="true"></div>
+            <div class="light-rail left" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i></div>
+            <div class="light-rail right" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i></div>
+
+            <div class="scan-bed">
+              <div class="empty-card" id="emptyCard" aria-hidden="true">
+                <span>?</span>
+                <small>AGUARDANDO CARTA</small>
+              </div>
+              <div class="fossil-card" id="fossilCard" role="img" aria-label="Carta ainda não revelada" hidden></div>
+              <div class="scan-line" aria-hidden="true"></div>
+            </div>
+
+            <button class="uv-button" id="uvButton" type="button" disabled>
+              <span class="hold-ring" aria-hidden="true"></span>
+              <span class="uv-symbol" aria-hidden="true">UV</span>
+              <span class="uv-label"><strong>Segure para escanear</strong><small>mantenha pressionado</small></span>
+            </button>
+          </div>
+
+          <p class="scan-status" id="scanStatus" role="status" aria-live="polite">Escolha uma carta para começar.</p>
+        </section>
+      </div>
+
+      <section class="classification" id="classificationPanel" aria-labelledby="classificationTitle" hidden>
+        <div class="panel-heading centered">
+          <span class="step-badge">3</span>
+          <div><h3 id="classificationTitle">A qual era ele pertence?</h3><p>Observe o fóssil e escolha uma resposta.</p></div>
+        </div>
+
+        <div class="era-choices" id="eraChoices">
+          <button type="button" data-era="precambriana"><span></span><strong>Pré-Cambriana</strong><small>4,6 bilhões–541 mi</small></button>
+          <button type="button" data-era="paleozoica"><span></span><strong>Paleozoica</strong><small>541–252 mi</small></button>
+          <button type="button" data-era="mesozoica"><span></span><strong>Mesozoica</strong><small>252–66 mi</small></button>
+          <button type="button" data-era="cenozoica"><span></span><strong>Cenozoica</strong><small>66 mi–presente</small></button>
+        </div>
+
+        <div class="answer-box" id="scannerResult" role="status" aria-live="polite" hidden></div>
+      </section>
+
+      <div class="completion-card" id="scannerCompletion" hidden>
+        <span class="completion-icon" aria-hidden="true">🏆</span>
+        <p class="eyebrow">MISSÃO CONCLUÍDA</p>
+        <h3>As quatro eras foram identificadas!</h3>
+        <p>Você investigou fósseis separados por bilhões de anos de história.</p>
+        <div class="completion-actions">
+          <button class="primary-button" type="button" id="restartScanner">Jogar novamente</button>
+          <button class="secondary-button" type="button" data-open-screen="timelineScreen">Ir para a Linha do Tempo →</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="screen" id="timelineScreen" aria-labelledby="timelineTitle" hidden>
+      <button class="back-button" type="button" data-open-screen="hubScreen">← Voltar às missões</button>
+
+      <div class="section-heading">
+        <p class="eyebrow blue">MISSÃO 02 · 4,6 BILHÕES DE ANOS</p>
+        <h2 id="timelineTitle">Linha do Tempo</h2>
+        <p>Arraste cada marcador para indicar onde você acha que a era terminou. Depois, revele a escala verdadeira.</p>
+      </div>
+
+      <section class="timeline-board" aria-labelledby="earthHistoryTitle">
+        <div class="timeline-topline">
+          <div><span class="step-badge">1</span><h3 id="earthHistoryTitle">Faça suas estimativas</h3></div>
+          <span class="scale-label">4,6 bilhões de anos</span>
+        </div>
+
+        <div class="earth-axis" id="earthAxis" aria-label="Linha proporcional da história da Terra">
+          <div class="axis-segment pre" title="Pré-Cambriana"></div>
+          <div class="axis-segment paleo" title="Paleozoica"></div>
+          <div class="axis-segment meso" title="Mesozoica"></div>
+          <div class="axis-segment ceno" title="Cenozoica"></div>
+          <span class="human-dot" id="humanDot" aria-hidden="true"></span>
+        </div>
+        <div class="axis-ends"><span>Formação da Terra</span><span>Hoje</span></div>
+
+        <div class="marker-list" id="markerList">
+          <label class="marker-row" data-era="precambriana">
+            <span class="marker-name"><i></i>Fim da Pré-Cambriana</span>
+            <input type="range" min="1" max="100" value="58" aria-label="Posição estimada para o fim da Pré-Cambriana">
+            <output>?</output>
+          </label>
+          <label class="marker-row" data-era="paleozoica">
+            <span class="marker-name"><i></i>Fim da Paleozoica</span>
+            <input type="range" min="1" max="100" value="70" aria-label="Posição estimada para o fim da Paleozoica">
+            <output>?</output>
+          </label>
+          <label class="marker-row" data-era="mesozoica">
+            <span class="marker-name"><i></i>Fim da Mesozoica</span>
+            <input type="range" min="1" max="100" value="82" aria-label="Posição estimada para o fim da Mesozoica">
+            <output>?</output>
+          </label>
+          <label class="marker-row" data-era="cenozoica">
+            <span class="marker-name"><i></i>Cenozoica até o presente</span>
+            <input type="range" min="1" max="100" value="94" aria-label="Posição estimada para o presente, fim da Cenozoica">
+            <output>?</output>
+          </label>
+        </div>
+
+        <button class="reveal-button" id="revealTimeline" type="button">Revelar linha verdadeira</button>
+
+        <div class="timeline-feedback" id="timelineFeedback" role="status" aria-live="polite" hidden></div>
+      </section>
+
+      <section class="timeline-reveal" id="timelineReveal" hidden>
+        <div class="reveal-copy">
+          <p class="eyebrow">UMA SURPRESA DE PROPORÇÃO</p>
+          <h3>A Pré-Cambriana ocupa quase toda a linha!</h3>
+          <p>Ela representa cerca de <strong>88%</strong> de toda a história da Terra. Para enxergar melhor as eras seguintes, precisamos ampliar os últimos 541 milhões de anos.</p>
+        </div>
+
+        <div class="zoom-card">
+          <div class="zoom-title"><span>🔎 AMPLIAÇÃO</span><strong>Últimos 541 milhões de anos</strong></div>
+          <div class="zoom-axis" aria-label="Ampliação proporcional das eras Paleozoica, Mesozoica e Cenozoica">
+            <div class="paleo"><strong>Paleozoica</strong><small>289 mi</small></div>
+            <div class="meso"><strong>Mesozoica</strong><small>186 mi</small></div>
+            <div class="ceno"><strong>Cenozoica</strong><small>66 mi</small><i class="zoom-human-dot" id="zoomHumanDot" aria-hidden="true"></i></div>
+          </div>
+        </div>
+
+        <button class="human-button" id="revealHumans" type="button">E nós, onde estamos?</button>
+
+        <div class="human-answer" id="humanAnswer" hidden>
+          <div class="human-pulse" aria-hidden="true">●</div>
+          <div><p class="eyebrow">UM PONTINHO NO FINAL</p><h3>O Homo sapiens chegou há cerca de 300 mil anos.</h3><p>Isso equivale a apenas <strong>0,0065%</strong> da história da Terra — pequeno demais para aparecer nesta linha sem uma ampliação enorme.</p></div>
+        </div>
+
+        <div class="timeline-actions">
+          <button class="secondary-button" id="restartTimeline" type="button">Tentar novamente</button>
+          <a class="primary-button link-button" href="../index.html">Explorar as quatro eras →</a>
+        </div>
+      </section>
+    </section>
+  </main>
+
+  <footer>Projeto Dinovadores · FESC 2026 · Objetivo Mogi</footer>
+
+  <script src="game.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,12 @@
+{
+  "name": "Dinovadores — Modo Feira",
+  "short_name": "Dinovadores",
+  "description": "Scanner UV de fósseis e Linha do Tempo geológica.",
+  "lang": "pt-BR",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#070a12",
+  "theme_color": "#080b14"
+}
