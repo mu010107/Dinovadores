@@ -60,13 +60,6 @@
     }
   ];
 
-  const eraLabels = {
-    precambriana: "Pré-Cambriana",
-    paleozoica: "Paleozoica",
-    mesozoica: "Mesozoica",
-    cenozoica: "Cenozoica"
-  };
-
   const targets = {
     precambriana: 88.239,
     paleozoica: 94.522,
@@ -130,14 +123,9 @@
 
   const HOLD_DURATION = 850;
 
-  /*
-   * Tempos de espera antes dos movimentos automáticos.
-   * Todos os valores estão em milissegundos.
-   */
   const SCROLL_DELAY = {
     openScreen: 700,
     navigation: 700,
-    scanComplete: 900,
     timelineReveal: 1600,
     humansReveal: 800
   };
@@ -379,15 +367,10 @@
   }
 
   function resetChoiceButtons() {
-    eraChoices
-      .querySelectorAll("button")
-      .forEach(function (button) {
-        button.disabled = false;
-        button.classList.remove(
-          "is-wrong",
-          "is-correct"
-        );
-      });
+    eraChoices.querySelectorAll("button").forEach(function (button) {
+      button.disabled = false;
+      button.classList.remove("is-wrong", "is-correct");
+    });
   }
 
   function resetScannerRound() {
@@ -399,15 +382,8 @@
     scannerAnswered = false;
     wrongAttempts = 0;
 
-    uvDevice.classList.remove(
-      "is-scanning",
-      "is-revealed"
-    );
-
-    uvButton.classList.remove(
-      "is-holding",
-      "is-complete"
-    );
+    uvDevice.classList.remove("is-scanning", "is-revealed");
+    uvButton.classList.remove("is-holding", "is-complete");
 
     uvButton.style.setProperty(
       "--hold-progress",
@@ -416,13 +392,11 @@
 
     uvButton.disabled = true;
 
-    uvButton
-      .querySelector("strong")
-      .textContent = "Segure para escanear";
+    uvButton.querySelector("strong").textContent =
+      "Segure para escanear";
 
-    uvButton
-      .querySelector("small")
-      .textContent = "mantenha pressionado";
+    uvButton.querySelector("small").textContent =
+      "mantenha pressionado";
 
     emptyCard.hidden = false;
     fossilCard.hidden = true;
@@ -446,11 +420,9 @@
 
     resetChoiceButtons();
 
-    cardDeck
-      .querySelectorAll(".deck-card")
-      .forEach(function (card) {
-        card.classList.remove("is-selected");
-      });
+    cardDeck.querySelectorAll(".deck-card").forEach(function (card) {
+      card.classList.remove("is-selected");
+    });
   }
 
   function resetScannerGame() {
@@ -474,11 +446,9 @@
       return;
     }
 
-    cardDeck
-      .querySelectorAll(".deck-card")
-      .forEach(function (item) {
-        item.classList.remove("is-selected");
-      });
+    cardDeck.querySelectorAll(".deck-card").forEach(function (item) {
+      item.classList.remove("is-selected");
+    });
 
     selectedCard = card;
     selectedCard.classList.add("is-selected");
@@ -508,6 +478,7 @@
     if (navigator.vibrate) {
       navigator.vibrate(25);
     }
+  }
 
   function holdTick(now) {
     if (!holding || scannerRevealed) {
@@ -515,6 +486,7 @@
     }
 
     const elapsed = now - holdStart;
+
     const progress = Math.min(
       elapsed / HOLD_DURATION,
       1
@@ -530,8 +502,7 @@
       return;
     }
 
-    holdFrame =
-      window.requestAnimationFrame(holdTick);
+    holdFrame = window.requestAnimationFrame(holdTick);
   }
 
   function beginHold(event) {
@@ -560,9 +531,7 @@
       uvButton.setPointerCapture
     ) {
       try {
-        uvButton.setPointerCapture(
-          event.pointerId
-        );
+        uvButton.setPointerCapture(event.pointerId);
       } catch (error) {
         /* Sem suporte completo a captura. */
       }
@@ -577,8 +546,7 @@
     scanStatus.textContent =
       "Continue segurando... a luz UV está varrendo a carta.";
 
-    holdFrame =
-      window.requestAnimationFrame(holdTick);
+    holdFrame = window.requestAnimationFrame(holdTick);
   }
 
   function cancelHold() {
@@ -628,14 +596,11 @@
 
     uvButton.disabled = true;
 
-    uvButton
-      .querySelector("strong")
-      .textContent = "Fóssil revelado!";
+    uvButton.querySelector("strong").textContent =
+      "Fóssil revelado!";
 
-    uvButton
-      .querySelector("small")
-      .textContent =
-        "agora classifique a descoberta";
+    uvButton.querySelector("small").textContent =
+      "agora classifique a descoberta";
 
     uvDevice.classList.remove("is-scanning");
     uvDevice.classList.add("is-revealed");
@@ -646,7 +611,7 @@
     );
 
     scanStatus.textContent =
-      "Leitura concluída. Observe os detalhes e escolha a era.";
+      "Fóssil revelado! Observe com calma. Quando estiver pronto, role para baixo e escolha a era.";
 
     classificationPanel.hidden = false;
 
@@ -655,51 +620,28 @@
     if (navigator.vibrate) {
       navigator.vibrate([40, 40, 80]);
     }
+
+    /*
+     * Não movimentar a tela neste momento.
+     * A pessoa observa o fóssil e desce quando estiver pronta.
+     */
   }
 
-  uvButton.addEventListener(
-    "pointerdown",
-    beginHold
-  );
+  uvButton.addEventListener("pointerdown", beginHold);
+  uvButton.addEventListener("pointerup", cancelHold);
+  uvButton.addEventListener("pointercancel", cancelHold);
+  uvButton.addEventListener("lostpointercapture", cancelHold);
+  uvButton.addEventListener("keydown", beginHold);
 
-  uvButton.addEventListener(
-    "pointerup",
-    cancelHold
-  );
-
-  uvButton.addEventListener(
-    "pointercancel",
-    cancelHold
-  );
-
-  uvButton.addEventListener(
-    "lostpointercapture",
-    cancelHold
-  );
-
-  uvButton.addEventListener(
-    "keydown",
-    beginHold
-  );
-
-  uvButton.addEventListener(
-    "keyup",
-    function (event) {
-      if (
-        event.key === " " ||
-        event.key === "Enter"
-      ) {
-        cancelHold();
-      }
+  uvButton.addEventListener("keyup", function (event) {
+    if (event.key === " " || event.key === "Enter") {
+      cancelHold();
     }
-  );
+  });
 
-  uvButton.addEventListener(
-    "contextmenu",
-    function (event) {
-      event.preventDefault();
-    }
-  );
+  uvButton.addEventListener("contextmenu", function (event) {
+    event.preventDefault();
+  });
 
   function finishScannerRound() {
     scannerAnswered = true;
@@ -708,7 +650,6 @@
     selectedCard.classList.add("is-used");
 
     discoveries += 1;
-
     renderProgress();
 
     if (discoveries === fossils.length) {
@@ -745,7 +686,6 @@
         .getElementById("nextCard")
         .addEventListener("click", function () {
           roundIndex += 1;
-
           resetScannerRound();
 
           scrollAfter(
@@ -757,115 +697,97 @@
     }
   }
 
-  eraChoices.addEventListener(
-    "click",
-    function (event) {
-      const button = event.target.closest(
-        "button[data-era]"
+  eraChoices.addEventListener("click", function (event) {
+    const button = event.target.closest("button[data-era]");
+
+    if (
+      !button ||
+      !scannerRevealed ||
+      scannerAnswered
+    ) {
+      return;
+    }
+
+    const chosenEra = button.dataset.era;
+
+    scannerResult.hidden = false;
+
+    if (chosenEra !== currentFossil.era) {
+      wrongAttempts += 1;
+
+      button.classList.add("is-wrong");
+      button.disabled = true;
+
+      const clueIndex = Math.min(
+        wrongAttempts - 1,
+        currentFossil.clues.length - 1
       );
 
-      if (
-        !button ||
-        !scannerRevealed ||
-        scannerAnswered
-      ) {
-        return;
-      }
-
-      const chosenEra = button.dataset.era;
-
-      scannerResult.hidden = false;
-
-      if (chosenEra !== currentFossil.era) {
-        wrongAttempts += 1;
-
-        button.classList.add("is-wrong");
-        button.disabled = true;
-
-        const clueIndex = Math.min(
-          wrongAttempts - 1,
-          currentFossil.clues.length - 1
-        );
-
-        scannerResult.className =
-          "answer-box wrong";
-
-        scannerResult.innerHTML =
-          "<h4>Ainda não — tente outra era.</h4>" +
-          "<p>" +
-          currentFossil.clues[clueIndex] +
-          "</p>";
-
-        playTone("wrong");
-
-        if (navigator.vibrate) {
-          navigator.vibrate(70);
-        }
-
-        return;
-      }
-
-      button.classList.add("is-correct");
-
-      eraChoices
-        .querySelectorAll("button")
-        .forEach(function (choice) {
-          choice.disabled = true;
-        });
-
-      scannerResult.className =
-        "answer-box correct";
+      scannerResult.className = "answer-box wrong";
 
       scannerResult.innerHTML =
-        "<h4>Correto! É " +
-        currentFossil.name +
-        ".</h4>" +
-        "<p>Ele pertence à era " +
-        '<strong style="color:' +
-        currentFossil.color +
-        '">' +
-        currentFossil.eraName +
-        "</strong>. " +
-        currentFossil.fact +
-        "</p>" +
-        '<div class="answer-actions">' +
-        '<a class="secondary-button link-button" href="' +
-        currentFossil.href +
-        '">' +
-        "Explorar esta era" +
-        "</a>" +
-        "</div>";
+        "<h4>Ainda não — tente outra era.</h4>" +
+        "<p>" +
+        currentFossil.clues[clueIndex] +
+        "</p>";
 
-      playTone("correct");
+      playTone("wrong");
 
       if (navigator.vibrate) {
-        navigator.vibrate([40, 50, 40]);
+        navigator.vibrate(70);
       }
 
-      finishScannerRound();
+      return;
     }
-  );
 
-  restartScanner.addEventListener(
-    "click",
-    function () {
-      resetScannerGame();
+    button.classList.add("is-correct");
 
-      scrollAfter(
-        document.querySelector(
-          "#scannerScreen .section-heading"
-        ),
-        SCROLL_DELAY.navigation,
-        "start"
-      );
+    eraChoices.querySelectorAll("button").forEach(function (choice) {
+      choice.disabled = true;
+    });
+
+    scannerResult.className = "answer-box correct";
+
+    scannerResult.innerHTML =
+      "<h4>Correto! É " +
+      currentFossil.name +
+      ".</h4>" +
+      "<p>Ele pertence à era " +
+      '<strong style="color:' +
+      currentFossil.color +
+      '">' +
+      currentFossil.eraName +
+      "</strong>. " +
+      currentFossil.fact +
+      "</p>" +
+      '<div class="answer-actions">' +
+      '<a class="secondary-button link-button" href="' +
+      currentFossil.href +
+      '">' +
+      "Explorar esta era" +
+      "</a>" +
+      "</div>";
+
+    playTone("correct");
+
+    if (navigator.vibrate) {
+      navigator.vibrate([40, 50, 40]);
     }
-  );
 
-  function setRangeVisual(
-    input,
-    value,
-    showNumber
-  ) {
+    finishScannerRound();
+  });
+
+  restartScanner.addEventListener("click", function () {
+    resetScannerGame();
+
+    scrollAfter(
+      document.querySelector("#scannerScreen .section-heading"),
+      SCROLL_DELAY.navigation,
+      "start"
+    );
+  });
+
+  function setRangeVisual(input, value, showNumber) {
     input.value = String(value);
 
     input.style.setProperty(
@@ -873,8 +795,7 @@
       value + "%"
     );
 
-    const output =
-      input.parentElement.querySelector("output");
+    const output = input.parentElement.querySelector("output");
 
     output.value = showNumber
       ? Math.round(value) + "%"
@@ -892,24 +813,16 @@
       false
     );
 
-    input.addEventListener(
-      "input",
-      function () {
-        setRangeVisual(
-          input,
-          Number(input.value),
-          false
-        );
-      }
-    );
+    input.addEventListener("input", function () {
+      setRangeVisual(
+        input,
+        Number(input.value),
+        false
+      );
+    });
   });
 
-  function animateMarker(
-    input,
-    from,
-    to,
-    duration
-  ) {
+  function animateMarker(input, from, to, duration) {
     const started = performance.now();
 
     function frame(now) {
@@ -952,154 +865,123 @@
     return "Boa tentativa! A escala verdadeira surpreende: quase toda a história está na Pré-Cambriana.";
   }
 
-  revealTimeline.addEventListener(
-    "click",
-    function () {
-      if (timelineIsRevealed) {
-        return;
-      }
-
-      timelineIsRevealed = true;
-
-      const errors = [];
-
-      markerRows.forEach(function (row) {
-        const era = row.dataset.era;
-        const input = row.querySelector("input");
-        const guess = Number(input.value);
-
-        errors.push(
-          Math.abs(guess - targets[era])
-        );
-
-        input.disabled = true;
-
-        animateMarker(
-          input,
-          guess,
-          targets[era],
-          1150
-        );
-      });
-
-      timelineBoard.classList.add(
-        "is-revealed"
-      );
-
-      revealTimeline.disabled = true;
-
-      revealTimeline.textContent =
-        "Linha verdadeira revelada";
-
-      timelineFeedback.hidden = false;
-
-      timelineFeedback.innerHTML =
-        "<strong>" +
-        scoreTimeline(errors) +
-        "</strong><br>" +
-        "Os marcadores estão se movendo para suas posições corretas.";
-
-      timelineReveal.hidden = false;
-
-      playTone("correct");
-
-      if (navigator.vibrate) {
-        navigator.vibrate([45, 40, 80]);
-      }
-
-      scrollAfter(
-        timelineReveal,
-        SCROLL_DELAY.timelineReveal,
-        "start"
-      );
+  revealTimeline.addEventListener("click", function () {
+    if (timelineIsRevealed) {
+      return;
     }
-  );
 
-  revealHumans.addEventListener(
-    "click",
-    function () {
-      earthAxis.classList.add("show-humans");
-      zoomHumanDot.classList.add("is-visible");
+    timelineIsRevealed = true;
 
-      humanAnswer.hidden = false;
-      revealHumans.disabled = true;
+    const errors = [];
 
-      revealHumans.textContent =
-        "Estamos no último pontinho da linha";
+    markerRows.forEach(function (row) {
+      const era = row.dataset.era;
+      const input = row.querySelector("input");
+      const guess = Number(input.value);
 
-      playTone("human");
-
-      if (navigator.vibrate) {
-        navigator.vibrate([
-          30,
-          50,
-          30,
-          50,
-          90
-        ]);
-      }
-
-      scrollAfter(
-        humanAnswer,
-        SCROLL_DELAY.humansReveal,
-        "center"
+      errors.push(
+        Math.abs(guess - targets[era])
       );
+
+      input.disabled = true;
+
+      animateMarker(
+        input,
+        guess,
+        targets[era],
+        1150
+      );
+    });
+
+    timelineBoard.classList.add("is-revealed");
+    revealTimeline.disabled = true;
+
+    revealTimeline.textContent =
+      "Linha verdadeira revelada";
+
+    timelineFeedback.hidden = false;
+
+    timelineFeedback.innerHTML =
+      "<strong>" +
+      scoreTimeline(errors) +
+      "</strong><br>" +
+      "Os marcadores estão se movendo para suas posições corretas.";
+
+    timelineReveal.hidden = false;
+
+    playTone("correct");
+
+    if (navigator.vibrate) {
+      navigator.vibrate([45, 40, 80]);
     }
-  );
 
-  restartTimeline.addEventListener(
-    "click",
-    function () {
-      timelineIsRevealed = false;
+    scrollAfter(
+      timelineReveal,
+      SCROLL_DELAY.timelineReveal,
+      "start"
+    );
+  });
 
-      timelineBoard.classList.remove(
-        "is-revealed"
-      );
+  revealHumans.addEventListener("click", function () {
+    earthAxis.classList.add("show-humans");
+    zoomHumanDot.classList.add("is-visible");
 
-      earthAxis.classList.remove(
-        "show-humans"
-      );
+    humanAnswer.hidden = false;
+    revealHumans.disabled = true;
 
-      zoomHumanDot.classList.remove(
-        "is-visible"
-      );
+    revealHumans.textContent =
+      "Estamos no último pontinho da linha";
 
-      timelineFeedback.hidden = true;
-      timelineReveal.hidden = true;
-      humanAnswer.hidden = true;
+    playTone("human");
 
-      revealHumans.disabled = false;
-
-      revealHumans.textContent =
-        "E nós, onde estamos?";
-
-      revealTimeline.disabled = false;
-
-      revealTimeline.textContent =
-        "Revelar linha verdadeira";
-
-      markerRows.forEach(function (row) {
-        const input =
-          row.querySelector("input");
-
-        input.disabled = false;
-
-        setRangeVisual(
-          input,
-          initialTimeline[row.dataset.era],
-          false
-        );
-      });
-
-      scrollAfter(
-        document.querySelector(
-          "#timelineScreen .section-heading"
-        ),
-        SCROLL_DELAY.navigation,
-        "start"
-      );
+    if (navigator.vibrate) {
+      navigator.vibrate([30, 50, 30, 50, 90]);
     }
-  );
+
+    scrollAfter(
+      humanAnswer,
+      SCROLL_DELAY.humansReveal,
+      "center"
+    );
+  });
+
+  restartTimeline.addEventListener("click", function () {
+    timelineIsRevealed = false;
+
+    timelineBoard.classList.remove("is-revealed");
+    earthAxis.classList.remove("show-humans");
+    zoomHumanDot.classList.remove("is-visible");
+
+    timelineFeedback.hidden = true;
+    timelineReveal.hidden = true;
+    humanAnswer.hidden = true;
+
+    revealHumans.disabled = false;
+    revealHumans.textContent =
+      "E nós, onde estamos?";
+
+    revealTimeline.disabled = false;
+    revealTimeline.textContent =
+      "Revelar linha verdadeira";
+
+    markerRows.forEach(function (row) {
+      const input = row.querySelector("input");
+
+      input.disabled = false;
+
+      setRangeVisual(
+        input,
+        initialTimeline[row.dataset.era],
+        false
+      );
+    });
+
+    scrollAfter(
+      document.querySelector("#timelineScreen .section-heading"),
+      SCROLL_DELAY.navigation,
+      "start"
+    );
+  });
 
   resetScannerGame();
 
@@ -1110,18 +992,15 @@
       location.hostname === "localhost"
     )
   ) {
-    window.addEventListener(
-      "load",
-      function () {
-        navigator.serviceWorker
-          .register("sw.js")
-          .catch(function () {
-            /*
-             * O jogo continua funcionando
-             * normalmente mesmo sem cache offline.
-             */
-          });
-      }
-    );
+    window.addEventListener("load", function () {
+      navigator.serviceWorker
+        .register("sw.js")
+        .catch(function () {
+          /*
+           * O jogo continua funcionando
+           * normalmente mesmo sem cache offline.
+           */
+        });
+    });
   }
 }());
