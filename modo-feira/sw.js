@@ -1,4 +1,4 @@
-const CACHE_NAME = "dinovadores-modo-feira-v4";
+const CACHE_NAME = "dinovadores-modo-feira-v5";
 
 const APP_FILES = [
   "./",
@@ -7,10 +7,11 @@ const APP_FILES = [
   "./game.js",
   "./manifest.webmanifest",
   "./assets/scanner-mesa.png",
-  "./assets/dickinsonia.png",
-  "./assets/trilobita.png",
-  "./assets/trex.png",
-  "./assets/mamute.png"
+  "./assets/carta-normal.png",
+  "./assets/carta-uv-dickinsonia.png",
+  "./assets/carta-uv-trilobita.png",
+  "./assets/carta-uv-trex.png",
+  "./assets/carta-uv-mamute.png"
 ];
 
 self.addEventListener("install", function (event) {
