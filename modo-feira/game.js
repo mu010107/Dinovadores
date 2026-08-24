@@ -656,12 +656,6 @@
     if (navigator.vibrate) {
       navigator.vibrate([40, 40, 80]);
     }
-
-    scrollAfter(
-      classificationPanel,
-      SCROLL_DELAY.scanComplete,
-      "start"
-    );
   }
 
   uvButton.addEventListener(
