@@ -1524,3 +1524,78 @@ input:focus-visible{
     transition-duration:.01ms!important;
   }
     }
+/* =====================================================
+   CARTAS PLANAS — ATUALIZAÇÃO V5
+   ===================================================== */
+
+.deck-card{
+  min-height:0;
+  aspect-ratio:2/3;
+  background-color:#080a0f;
+  background-image:
+    linear-gradient(
+      rgba(3,4,8,.08),
+      rgba(3,4,8,.08)
+    ),
+    url("assets/carta-normal.png");
+  background-position:center;
+  background-repeat:no-repeat;
+  background-size:100% 100%;
+}
+
+.fossil-card{
+  width:90%;
+  aspect-ratio:2/3;
+  border:0;
+  background-color:#080a0f;
+  background-position:center;
+  background-repeat:no-repeat;
+  background-size:contain;
+  box-shadow:
+    0 16px 28px rgba(0,0,0,.52);
+  transition:
+    filter .4s ease,
+    box-shadow .4s ease,
+    transform .4s ease,
+    opacity .4s ease;
+}
+
+.uv-device.is-revealed .fossil-card{
+  background-position:center;
+  box-shadow:
+    0 0 18px rgba(157,69,255,.65),
+    0 0 45px rgba(82,31,183,.35),
+    0 16px 28px rgba(0,0,0,.52);
+  animation:uv-card-reveal .65s ease both;
+}
+
+@keyframes uv-card-reveal{
+  0%{
+    opacity:.45;
+    filter:brightness(1.8) saturate(1.4);
+    transform:scale(.985);
+  }
+
+  100%{
+    opacity:1;
+    filter:brightness(1) saturate(1);
+    transform:scale(1);
+  }
+}
+
+@media(max-width:540px){
+  .deck-card{
+    min-height:0;
+    aspect-ratio:2/3;
+  }
+
+  .fossil-card{
+    width:88%;
+  }
+}
+
+@media(prefers-reduced-motion:reduce){
+  .uv-device.is-revealed .fossil-card{
+    animation:none;
+  }
+}
