@@ -1599,3 +1599,9 @@ input:focus-visible{
     animation:none;
   }
 }
+@media (max-width:820px){
+  .hero-copy .eyebrow,
+  .hero-copy h1{
+    text-align:center;
+  }
+}
