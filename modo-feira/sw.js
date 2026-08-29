@@ -1,4 +1,4 @@
-const CACHE_NAME = "dinovadores-modo-feira-v7";
+const CACHE_NAME = "dinovadores-modo-feira-v8";
 
 const APP_FILES = [
   "./",
