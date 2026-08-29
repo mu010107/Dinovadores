@@ -6,7 +6,7 @@ const APP_FILES = [
   "./style.css",
   "./game.js",
   "./manifest.webmanifest",
-  "./assets/scanner-mesa.png",
+  "./assets/Dinovadores.jpg",
   "./assets/carta-normal.png",
   "./assets/carta-uv-dickinsonia.png",
   "./assets/carta-uv-trilobita.png",
