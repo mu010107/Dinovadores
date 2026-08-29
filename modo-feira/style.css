@@ -1,4 +1,4 @@
-:root{
+u801:root{
   --bg:#070a12;
   --panel:#101521;
   --panel-2:#151b29;
@@ -1599,9 +1599,12 @@ input:focus-visible{
     animation:none;
   }
 }
-@media (max-width:820px){
-  .hero-copy .eyebrow,
-  .hero-copy h1{
-    text-align:center;
+
+@media(max-width:820px){
+  .hero-copy > .eyebrow,
+  .hero-copy > h1{
+    width:100%;
+    align-self:stretch;
+    text-align:center !important;
   }
 }
