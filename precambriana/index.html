@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="theme-color" content="#09070d">
+
   <title>Cambriano | Dinovadores</title>
 
   <style>
@@ -17,16 +18,27 @@
       --radius:22px;
     }
 
-    *{box-sizing:border-box}
+    *{
+      box-sizing:border-box;
+    }
 
     body{
       margin:0;
       min-height:100vh;
       background:
-        radial-gradient(circle at 50% 0%, rgba(130,50,190,.20), transparent 28rem),
+        radial-gradient(
+          circle at 50% 0%,
+          rgba(130,50,190,.20),
+          transparent 28rem
+        ),
         var(--bg);
       color:var(--text);
-      font-family:Arial,Helvetica,sans-serif;
+      font-family:Arial, Helvetica, sans-serif;
+    }
+
+    button,
+    a{
+      font:inherit;
     }
 
     .page{
@@ -59,10 +71,13 @@
 
     .experience{
       position:relative;
-      overflow:hidden;
       min-height:520px;
+      overflow:hidden;
       border-radius:var(--radius);
       background:var(--panel);
+      box-shadow:
+        0 20px 50px rgba(0,0,0,.30),
+        inset 0 0 0 1px rgba(185,108,255,.10);
     }
 
     .media-layer{
@@ -70,14 +85,42 @@
       inset:0;
       width:100%;
       height:100%;
-      transition:opacity 1s ease, visibility 1s ease;
+      transition:
+        opacity .8s ease,
+        visibility .8s ease;
+    }
+
+    #videoLayer{
+      z-index:2;
+      opacity:1;
+      visibility:visible;
+    }
+
+    #modelLayer{
+      z-index:1;
+      opacity:0;
+      visibility:hidden;
+    }
+
+    .experience.show-model #videoLayer{
+      opacity:0;
+      visibility:hidden;
+      pointer-events:none;
+    }
+
+    .experience.show-model #modelLayer{
+      z-index:3;
+      opacity:1;
+      visibility:visible;
     }
 
     video,
     .model-frame{
+      display:block;
       width:100%;
       height:100%;
       min-height:520px;
+      border:0;
       background:#111;
     }
 
@@ -85,15 +128,46 @@
       object-fit:cover;
     }
 
-    .model-frame{
-      display:block;
-      border:0;
+    .ctrl-btn{
+      position:absolute;
+      top:14px;
+      z-index:5;
+      min-height:42px;
+      border:1px solid rgba(255,255,255,.24);
+      border-radius:999px;
+      padding:9px 14px;
+      background:rgba(8,8,12,.72);
+      color:#fff;
+      font-size:.88rem;
+      font-weight:800;
+      cursor:pointer;
+      backdrop-filter:blur(7px);
+      -webkit-backdrop-filter:blur(7px);
+      transition:
+        opacity .25s ease,
+        visibility .25s ease,
+        background .2s ease;
     }
 
-    #modelLayer{
-      opacity:1;
-      visibility:visible;
-      z-index:1;
+    .ctrl-btn:hover,
+    .ctrl-btn:focus-visible{
+      background:rgba(43,24,61,.92);
+      outline:2px solid rgba(216,173,255,.80);
+      outline-offset:2px;
+    }
+
+    .audio-btn{
+      left:14px;
+    }
+
+    .skip-btn{
+      right:14px;
+    }
+
+    .experience.show-model .ctrl-btn{
+      opacity:0;
+      visibility:hidden;
+      pointer-events:none;
     }
 
     .buttons{
@@ -113,7 +187,11 @@
       color:#fff;
       text-decoration:none;
       font-weight:900;
-      background:linear-gradient(135deg,var(--accent2),var(--accent));
+      background:linear-gradient(
+        135deg,
+        var(--accent2),
+        var(--accent)
+      );
     }
 
     .button.secondary{
@@ -121,19 +199,11 @@
       border:1px solid rgba(185,108,255,.28);
     }
 
-    .model-hint{
-      position:absolute;
-      left:50%;
-      bottom:62px;
-      transform:translateX(-50%);
-      z-index:3;
-      width:calc(100% - 32px);
-      padding:12px 14px;
-      border-radius:14px;
-      background:rgba(8,8,12,.72);
-      color:#e7e1eb;
-      font-size:.9rem;
-      pointer-events:none;
+    .button:hover,
+    .button:focus-visible{
+      filter:brightness(1.12);
+      outline:2px solid rgba(216,173,255,.75);
+      outline-offset:2px;
     }
 
     footer{
@@ -157,12 +227,34 @@
       .summary{
         padding:0 12px;
       }
+
+      .ctrl-btn{
+        top:12px;
+        padding:9px 12px;
+        font-size:.82rem;
+      }
+
+      .audio-btn{
+        left:12px;
+      }
+
+      .skip-btn{
+        right:12px;
+      }
+    }
+
+    @media(prefers-reduced-motion:reduce){
+      .media-layer,
+      .ctrl-btn{
+        transition:none;
+      }
     }
   </style>
 </head>
 
 <body>
   <main class="page">
+
     <h1>Cambriano</h1>
 
     <div class="period">
@@ -175,60 +267,188 @@
       tornaram-se alguns dos fósseis mais marcantes desse período.
     </p>
 
-    <section class="experience" id="experience">
+    <section
+      class="experience"
+      id="experience"
+      aria-label="Vídeo e modelo 3D do Cambriano">
 
-  <button
-    class="ctrl-btn audio-btn"
-    id="audioButton"
-    type="button">
-    🔇 Som
-  </button>
+      <button
+        class="ctrl-btn audio-btn"
+        id="audioButton"
+        type="button"
+        aria-label="Ativar o som do vídeo"
+        aria-pressed="false">
+        🔇 Som
+      </button>
 
-  <button
-    class="ctrl-btn skip"
-    id="skipButton"
-    type="button">
-    Pular vídeo
-  </button>
+      <button
+        class="ctrl-btn skip-btn"
+        id="skipButton"
+        type="button">
+        Pular vídeo
+      </button>
 
-  <div class="media-layer" id="videoLayer">
-    <video
-      id="eraVideo"
-      src="cambriano.mp4"
-      autoplay
-      muted
-      playsinline
-      preload="metadata">
-    </video>
-  </div>
+      <div
+        class="media-layer"
+        id="videoLayer"
+        aria-hidden="false">
 
-  <div class="media-layer" id="modelLayer">
-    <iframe
-      id="trilobiteModel"
-      class="model-frame"
-      title="Modelo 3D de um trilobita"
-      data-src="https://sketchfab.com/models/0c18dda9540945c3a59482f9a88e1147/embed?autostart=1&amp;ui_stop=0&amp;ui_share=0"
-      allow="autoplay; fullscreen; xr-spatial-tracking"
-      allowfullscreen>
-    </iframe>
-  </div>
+        <video
+          id="eraVideo"
+          src="./cambriano.mp4"
+          autoplay
+          muted
+          playsinline
+          preload="metadata">
 
-</section>
+          Seu navegador não conseguiu reproduzir o vídeo do Cambriano.
+        </video>
+      </div>
 
-    <div class="buttons">
-      <a class="button secondary" href="../index.html">
+      <div
+        class="media-layer"
+        id="modelLayer"
+        aria-hidden="true">
+
+        <iframe
+          id="trilobiteModel"
+          class="model-frame"
+          title="Modelo 3D de um trilobita"
+          data-src="https://sketchfab.com/models/0c18dda9540945c3a59482f9a88e1147/embed?autostart=1&amp;ui_stop=0&amp;ui_share=0&amp;ui_help=0&amp;ui_settings=0&amp;ui_infos=0"
+          allow="autoplay; fullscreen; xr-spatial-tracking"
+          allowfullscreen>
+        </iframe>
+      </div>
+
+    </section>
+
+    <nav
+      class="buttons"
+      aria-label="Navegação entre as etapas">
+
+      <a
+        class="button secondary"
+        href="../index.html">
         🏠 Página inicial
       </a>
 
-      <a class="button secondary" href="../paleozoica/index.html">
+      <a
+        class="button secondary"
+        href="../paleozoica/index.html">
         ➡ Próxima etapa
       </a>
-    </div>
+
+    </nav>
 
     <footer>
       Projeto Dinovadores · FESC · Objetivo Mogi
     </footer>
+
   </main>
 
+  <script>
+    const experience =
+      document.getElementById("experience");
+
+    const videoLayer =
+      document.getElementById("videoLayer");
+
+    const modelLayer =
+      document.getElementById("modelLayer");
+
+    const video =
+      document.getElementById("eraVideo");
+
+    const audioButton =
+      document.getElementById("audioButton");
+
+    const skipButton =
+      document.getElementById("skipButton");
+
+    const trilobiteModel =
+      document.getElementById("trilobiteModel");
+
+    let modelShown = false;
+
+    audioButton.addEventListener(
+      "click",
+      async function(){
+
+        video.muted = !video.muted;
+
+        audioButton.textContent =
+          video.muted
+            ? "🔇 Som"
+            : "🔊 Som";
+
+        audioButton.setAttribute(
+          "aria-label",
+          video.muted
+            ? "Ativar o som do vídeo"
+            : "Desativar o som do vídeo"
+        );
+
+        audioButton.setAttribute(
+          "aria-pressed",
+          String(!video.muted)
+        );
+
+        if(!video.muted && video.paused){
+          try{
+            await video.play();
+          }catch(error){
+            // O vídeo continua disponível para ser pulado.
+          }
+        }
+      }
+    );
+
+    function showModel(){
+      if(modelShown){
+        return;
+      }
+
+      modelShown = true;
+
+      video.pause();
+
+      if(!trilobiteModel.getAttribute("src")){
+        trilobiteModel.src =
+          trilobiteModel.dataset.src;
+      }
+
+      videoLayer.setAttribute(
+        "aria-hidden",
+        "true"
+      );
+
+      modelLayer.setAttribute(
+        "aria-hidden",
+        "false"
+      );
+
+      experience.classList.add(
+        "show-model"
+      );
+    }
+
+    video.addEventListener(
+      "ended",
+      showModel
+    );
+
+    video.addEventListener(
+      "error",
+      function(){
+        skipButton.textContent =
+          "Ver trilobita em 3D";
+      }
+    );
+
+    skipButton.addEventListener(
+      "click",
+      showModel
+    );
+  </script>
 </body>
 </html>
