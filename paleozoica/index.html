@@ -242,9 +242,9 @@
     </div>
 
     <p class="summary">
-      Nesse período, a vida se diversificou nos oceanos e conquistou
-      a terra firme. Surgiram peixes, plantas, insetos, anfíbios e
-      répteis, e formou-se a Pangeia.
+      O Dimetrodon viveu no Permiano e era um sinapsídeo, grupo mais próximo
+      dos mamíferos do que dos répteis. Ele surgiu milhões de anos antes dos
+      primeiros dinossauros.
     </p>
 
     <section class="experience" id="experience">
@@ -275,23 +275,23 @@
 
       <div class="media-layer" id="modelLayer">
         <iframe
-          id="trilobiteModel"
+          id="dimetrodonModel"
           class="model-frame"
-          title="Modelo 3D de um trilobita"
-          data-src="https://sketchfab.com/models/0c18dda9540945c3a59482f9a88e1147/embed?autostart=1&amp;ui_stop=0&amp;ui_share=0"
+          title="Modelo 3D de um Dimetrodon"
+          data-src="https://sketchfab.com/models/bcd0065a21b444b3a6718387ac87d591/embed?autostart=1&amp;ui_stop=0&amp;ui_share=0"
           allow="autoplay; fullscreen; xr-spatial-tracking"
           allowfullscreen>
         </iframe>
 
         <div class="model-hint">
           Arraste para girar e faça o gesto de pinça para aproximar.
-          Modelo 3D disponibilizado pelo Sedgwick Museum of Earth Sciences.
+          Observe a grande vela dorsal do Dimetrodon.
         </div>
       </div>
 
       <div class="transition-message">
-        Agora explore em 3D um trilobita, um dos maiores símbolos
-        da vida marinha paleozoica.
+        Agora explore em 3D o Dimetrodon, um sinapsídeo do Permiano
+        que viveu antes dos dinossauros.
       </div>
     </section>
 
@@ -301,7 +301,7 @@
       </a>
 
       <a class="button secondary" href="../mesozoica/index.html">
-        ➡ Próxima era
+        ➡ Próxima etapa
       </a>
     </div>
 
@@ -315,8 +315,8 @@
     const video = document.getElementById("eraVideo");
     const skipButton = document.getElementById("skipButton");
     const audioButton = document.getElementById("audioButton");
-    const trilobiteModel =
-      document.getElementById("trilobiteModel");
+    const dimetrodonModel =
+      document.getElementById("dimetrodonModel");
 
     let transitionStarted = false;
 
@@ -336,9 +336,9 @@
       transitionStarted = true;
       experience.classList.add("show-message");
 
-      if (!trilobiteModel.getAttribute("src")) {
-        trilobiteModel.src =
-          trilobiteModel.dataset.src;
+      if (!dimetrodonModel.getAttribute("src")) {
+        dimetrodonModel.src =
+          dimetrodonModel.dataset.src;
       }
 
       setTimeout(() => {

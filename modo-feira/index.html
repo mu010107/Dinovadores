@@ -35,7 +35,7 @@
         <div class="hero-copy">
           <p class="eyebrow">FESC 2026 · OBJETIVO MOGI</p>
           <h1 id="hubTitle">Escolha sua missão</h1>
-          <p>Investigue fósseis escondidos e descubra como 4,6 bilhões de anos cabem em uma única linha.</p>
+          <p>Investigue fósseis escondidos e descubra como 541 milhões de anos cabem em uma única linha.</p>
         </div>
         <img src="assets/Dinovadores.jpg" alt="Alunos do projeto Dinovadores" width="1536" height="1024">
       </div>
@@ -45,7 +45,7 @@
           <span class="mission-number">MISSÃO 01</span>
           <span class="mission-icon" aria-hidden="true">⌁</span>
           <strong>Scanner UV</strong>
-          <span>Revele o fóssil secreto e descubra a qual era ele pertence.</span>
+          <span>Revele o fóssil secreto e descubra a qual etapa ele pertence.</span>
           <b>Iniciar investigação <i aria-hidden="true">→</i></b>
         </button>
 
@@ -53,7 +53,7 @@
           <span class="mission-number">MISSÃO 02</span>
           <span class="mission-icon" aria-hidden="true">⌛</span>
           <strong>Linha do Tempo</strong>
-          <span>Posicione as eras e revele quanto da história da Terra cada uma ocupa.</span>
+          <span>Posicione as etapas e revele quanto dos últimos 541 milhões de anos cada uma ocupa.</span>
           <b>Viajar no tempo <i aria-hidden="true">→</i></b>
         </button>
       </div>
@@ -67,7 +67,7 @@
       <div class="section-heading">
         <p class="eyebrow purple">MISSÃO 01 · DETETIVE DO TEMPO</p>
         <h2 id="scannerTitle">Scanner UV</h2>
-        <p>Escolha uma carta, mantenha o botão pressionado para revelar o fóssil e classifique-o na era correta.</p>
+        <p>Escolha uma carta, mantenha o botão pressionado para revelar o fóssil e classifique-o na etapa correta.</p>
       </div>
 
       <div class="mission-progress" aria-label="Progresso da investigação">
@@ -119,12 +119,12 @@
       <section class="classification" id="classificationPanel" aria-labelledby="classificationTitle" hidden>
         <div class="panel-heading centered">
           <span class="step-badge">3</span>
-          <div><h3 id="classificationTitle">A qual era ele pertence?</h3><p>Observe o fóssil e escolha uma resposta.</p></div>
+          <div><h3 id="classificationTitle">A qual etapa ele pertence?</h3><p>Observe o fóssil e escolha uma resposta.</p></div>
         </div>
 
         <div class="era-choices" id="eraChoices">
-          <button type="button" data-era="precambriana"><span></span><strong>Pré-Cambriana</strong><small>4,6 bilhões–541 mi</small></button>
-          <button type="button" data-era="paleozoica"><span></span><strong>Paleozoica</strong><small>541–252 mi</small></button>
+          <button type="button" data-era="cambriano"><span></span><strong>Cambriano</strong><small>541–485 mi</small></button>
+          <button type="button" data-era="paleozoica"><span></span><strong>Paleozoica</strong><small>485–252 mi</small></button>
           <button type="button" data-era="mesozoica"><span></span><strong>Mesozoica</strong><small>252–66 mi</small></button>
           <button type="button" data-era="cenozoica"><span></span><strong>Cenozoica</strong><small>66 mi–presente</small></button>
         </div>
@@ -135,8 +135,8 @@
       <div class="completion-card" id="scannerCompletion" hidden>
         <span class="completion-icon" aria-hidden="true">🏆</span>
         <p class="eyebrow">MISSÃO CONCLUÍDA</p>
-        <h3>As quatro eras foram identificadas!</h3>
-        <p>Você investigou fósseis separados por bilhões de anos de história.</p>
+        <h3>As quatro etapas foram identificadas!</h3>
+        <p>Você investigou fósseis separados por milhões de anos de história.</p>
         <div class="completion-actions">
           <button class="primary-button" type="button" id="restartScanner">Jogar novamente</button>
           <button class="secondary-button" type="button" data-open-screen="timelineScreen">Ir para a Linha do Tempo →</button>
@@ -148,30 +148,30 @@
       <button class="back-button" type="button" data-open-screen="hubScreen">← Voltar às missões</button>
 
       <div class="section-heading">
-        <p class="eyebrow blue">MISSÃO 02 · 4,6 BILHÕES DE ANOS</p>
+        <p class="eyebrow blue">MISSÃO 02 · 541 MILHÕES DE ANOS</p>
         <h2 id="timelineTitle">Linha do Tempo</h2>
-        <p>Arraste cada marcador para indicar onde você acha que a era terminou. Depois, revele a escala verdadeira.</p>
+        <p>Arraste cada marcador para indicar onde você acha que a etapa terminou. Depois, revele a escala verdadeira.</p>
       </div>
 
       <section class="timeline-board" aria-labelledby="earthHistoryTitle">
         <div class="timeline-topline">
           <div><span class="step-badge">1</span><h3 id="earthHistoryTitle">Faça suas estimativas</h3></div>
-          <span class="scale-label">4,6 bilhões de anos</span>
+          <span class="scale-label">541 milhões de anos</span>
         </div>
 
         <div class="earth-axis" id="earthAxis" aria-label="Linha proporcional da história da Terra">
-          <div class="axis-segment pre" title="Pré-Cambriana"></div>
+          <div class="axis-segment pre" title="Cambriano"></div>
           <div class="axis-segment paleo" title="Paleozoica"></div>
           <div class="axis-segment meso" title="Mesozoica"></div>
           <div class="axis-segment ceno" title="Cenozoica"></div>
           <span class="human-dot" id="humanDot" aria-hidden="true"></span>
         </div>
-        <div class="axis-ends"><span>Formação da Terra</span><span>Hoje</span></div>
+        <div class="axis-ends"><span>Início do Cambriano · há 541 mi</span><span>Hoje</span></div>
 
         <div class="marker-list" id="markerList">
-          <label class="marker-row" data-era="precambriana">
-            <span class="marker-name"><i></i>Fim da Pré-Cambriana</span>
-            <input type="range" min="1" max="100" value="58" aria-label="Posição estimada para o fim da Pré-Cambriana">
+          <label class="marker-row" data-era="cambriano">
+            <span class="marker-name"><i></i>Fim do Cambriano</span>
+            <input type="range" min="1" max="100" value="18" aria-label="Posição estimada para o fim do Cambriano">
             <output>?</output>
           </label>
           <label class="marker-row" data-era="paleozoica">
@@ -199,14 +199,15 @@
       <section class="timeline-reveal" id="timelineReveal" hidden>
         <div class="reveal-copy">
           <p class="eyebrow">UMA SURPRESA DE PROPORÇÃO</p>
-          <h3>A Pré-Cambriana ocupa quase toda a linha!</h3>
-          <p>Ela representa cerca de <strong>88%</strong> de toda a história da Terra. Para enxergar melhor as eras seguintes, precisamos ampliar os últimos 541 milhões de anos.</p>
+          <h3>A linha começa no Cambriano!</h3>
+          <p>As posições acumuladas das etapas são <strong>10,35%, 53,42%, 87,8% e 100%</strong> ao longo dos últimos 541 milhões de anos.</p>
         </div>
 
         <div class="zoom-card">
           <div class="zoom-title"><span>🔎 AMPLIAÇÃO</span><strong>Últimos 541 milhões de anos</strong></div>
-          <div class="zoom-axis" aria-label="Ampliação proporcional das eras Paleozoica, Mesozoica e Cenozoica">
-            <div class="paleo"><strong>Paleozoica</strong><small>289 mi</small></div>
+          <div class="zoom-axis" aria-label="Representação proporcional das etapas Cambriano, Paleozoica, Mesozoica e Cenozoica">
+            <div class="pre"><strong>Cambriano</strong><small>56 mi</small></div>
+            <div class="paleo"><strong>Paleozoica</strong><small>233 mi</small></div>
             <div class="meso"><strong>Mesozoica</strong><small>186 mi</small></div>
             <div class="ceno"><strong>Cenozoica</strong><small>66 mi</small><i class="zoom-human-dot" id="zoomHumanDot" aria-hidden="true"></i></div>
           </div>
@@ -216,12 +217,12 @@
 
         <div class="human-answer" id="humanAnswer" hidden>
           <div class="human-pulse" aria-hidden="true">●</div>
-          <div><p class="eyebrow">UM PONTINHO NO FINAL</p><h3>O Homo sapiens chegou há cerca de 300 mil anos.</h3><p>Isso equivale a apenas <strong>0,0065%</strong> da história da Terra — pequeno demais para aparecer nesta linha sem uma ampliação enorme.</p></div>
+          <div><p class="eyebrow">UM PONTINHO NO FINAL</p><h3>O Homo sapiens chegou há cerca de 300 mil anos.</h3><p>Isso equivale a aproximadamente <strong>0,055%</strong> dos últimos 541 milhões de anos — pequeno demais para aparecer nesta linha sem uma ampliação enorme.</p></div>
         </div>
 
         <div class="timeline-actions">
           <button class="secondary-button" id="restartTimeline" type="button">Tentar novamente</button>
-          <a class="primary-button link-button" href="../index.html">Explorar as quatro eras →</a>
+          <a class="primary-button link-button" href="../index.html">Explorar as quatro etapas →</a>
         </div>
       </section>
     </section>

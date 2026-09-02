@@ -1,4 +1,4 @@
-const CACHE_NAME = "dinovadores-modo-feira-v11";
+const CACHE_NAME = "dinovadores-modo-feira-v12";
 
 const APP_FILES = [
   "./",
@@ -8,8 +8,8 @@ const APP_FILES = [
   "./manifest.webmanifest",
   "./assets/Dinovadores.jpg",
   "./assets/carta-normal.png",
-  "./assets/carta-uv-dickinsonia.png",
   "./assets/carta-uv-trilobita.png",
+  "./assets/carta-uv-dimetrodon.png",
   "./assets/carta-uv-trex.png",
   "./assets/carta-uv-mamute.png"
 ];

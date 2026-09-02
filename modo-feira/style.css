@@ -450,7 +450,7 @@ main{
   background-color:#111;
   background-image:
     linear-gradient(rgba(3,4,8,.14),rgba(3,4,8,.14)),
-    url("assets/dickinsonia.png");
+    url("assets/carta-normal.png");
   background-position:8% center;
   background-size:auto 100%;
   box-shadow:0 7px 14px rgba(0,0,0,.3);
@@ -795,7 +795,7 @@ main{
   font-size:.66rem;
 }
 
-.era-choices button[data-era="precambriana"]{
+.era-choices button[data-era="cambriano"]{
   --era-color:var(--purple);
 }
 
@@ -982,10 +982,10 @@ main{
   border-radius:0 999px 999px 0;
 }
 
-.axis-segment.pre{width:88.239%}
-.axis-segment.paleo{width:6.283%}
-.axis-segment.meso{width:4.043%}
-.axis-segment.ceno{width:1.435%}
+.axis-segment.pre{width:10.35%}
+.axis-segment.paleo{width:43.07%}
+.axis-segment.meso{width:34.38%}
+.axis-segment.ceno{width:12.2%}
 
 .timeline-board.is-revealed .axis-segment.pre{
   background:var(--purple);
@@ -1059,7 +1059,7 @@ main{
   gap:15px;
 }
 
-.marker-row[data-era="precambriana"]{--era:var(--purple)}
+.marker-row[data-era="cambriano"]{--era:var(--purple)}
 .marker-row[data-era="paleozoica"]{--era:var(--green)}
 .marker-row[data-era="mesozoica"]{--era:var(--orange)}
 .marker-row[data-era="cenozoica"]{--era:var(--blue)}
@@ -1250,8 +1250,13 @@ main{
   opacity:.82;
 }
 
+.zoom-axis .pre{
+  width:10.35%;
+  background:linear-gradient(135deg,var(--purple-dark),#7d2fe0);
+}
+
 .zoom-axis .paleo{
-  width:53.42%;
+  width:43.07%;
   background:linear-gradient(135deg,var(--green-dark),#0da864);
 }
 
