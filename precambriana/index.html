@@ -175,35 +175,45 @@
       tornaram-se alguns dos fósseis mais marcantes desse período.
     </p>
 
-    <section class="experience" id="experience">
-      <div class="media-layer" id="modelLayer">
-        
-          <video
-          id="eraVideo"
-          src="cambriano.mp4"
-          autoplay
-          muted
-          playsinline
-          preload="metadata">
-        </video>
-      </div>
-       
-        <iframe
-  id="trilobiteModel"
-  class="model-frame"
-  title="Modelo 3D de um trilobita"
-  src="https://sketchfab.com/models/0c18dda9540945c3a59482f9a88e1147/embed?autostart=1&amp;ui_stop=0&amp;ui_share=0"
-  allow="autoplay; fullscreen; xr-spatial-tracking"
-  allowfullscreen>
-        </iframe>
+    <<section class="experience" id="experience">
 
-        <div class="model-hint">
-          Arraste para girar e faça o gesto de pinça para aproximar.
-          Modelo 3D disponibilizado pela UQ School of the Environment.
-        </div>
-      </div>
+  <button
+    class="ctrl-btn audio-btn"
+    id="audioButton"
+    type="button">
+    🔇 Som
+  </button>
 
-    </section>
+  <button
+    class="ctrl-btn skip"
+    id="skipButton"
+    type="button">
+    Pular vídeo
+  </button>
+
+  <div class="media-layer" id="videoLayer">
+    <video
+      id="eraVideo"
+      src="cambriano.mp4"
+      autoplay
+      muted
+      playsinline
+      preload="metadata">
+    </video>
+  </div>
+
+  <div class="media-layer" id="modelLayer">
+    <iframe
+      id="trilobiteModel"
+      class="model-frame"
+      title="Modelo 3D de um trilobita"
+      data-src="https://sketchfab.com/models/0c18dda9540945c3a59482f9a88e1147/embed?autostart=1&amp;ui_stop=0&amp;ui_share=0"
+      allow="autoplay; fullscreen; xr-spatial-tracking"
+      allowfullscreen>
+    </iframe>
+  </div>
+
+</section>
 
     <div class="buttons">
       <a class="button secondary" href="../index.html">
