@@ -5,31 +5,31 @@
 
   const fossils = [
     {
-      id: "dickinsonia",
-      name: "Dickinsonia",
-      era: "precambriana",
-      eraName: "Pré-Cambriana",
-      uvImage: "assets/carta-uv-dickinsonia.png",
+      id: "trilobita",
+      name: "Trilobita",
+      era: "cambriano",
+      eraName: "Cambriano",
+      uvImage: "assets/carta-uv-trilobita.png",
       href: "../precambriana/",
       color: "#b96cff",
-      fact: "Viveu nos mares do Ediacarano, antes do surgimento de animais com esqueletos e conchas duras.",
+      fact: "Foi um artrópode marinho de carapaça segmentada e um dos fósseis mais marcantes do Cambriano.",
       clues: [
-        "Pista: seu corpo era mole, achatado e viveu muito antes dos dinossauros.",
-        "Pista extra: procure a era mais antiga de todas."
+        "Pista: este animal de carapaça viveu em antigos oceanos.",
+        "Pista extra: procure a primeira etapa da linha do tempo."
       ]
     },
     {
-      id: "trilobita",
-      name: "Trilobita",
+      id: "dimetrodon",
+      name: "Dimetrodon",
       era: "paleozoica",
       eraName: "Paleozoica",
-      uvImage: "assets/carta-uv-trilobita.png",
+      uvImage: "assets/carta-uv-dimetrodon.png",
       href: "../paleozoica/",
       color: "#39ef8e",
-      fact: "Foi um artrópode marinho de carapaça segmentada e um dos fósseis mais conhecidos dos oceanos paleozoicos.",
+      fact: "Viveu no Permiano e era um sinapsídeo que surgiu milhões de anos antes dos dinossauros.",
       clues: [
-        "Pista: este animal de carapaça viveu em antigos oceanos.",
-        "Pista extra: surgiu muito antes dos dinossauros, na era em que a vida conquistou os mares e a terra."
+        "Pista: observe a grande vela sobre as costas deste animal terrestre.",
+        "Pista extra: viveu no Permiano, antes dos dinossauros."
       ]
     },
     {
@@ -43,7 +43,7 @@
       fact: "Viveu no final do Cretáceo, entre aproximadamente 68 e 66 milhões de anos atrás.",
       clues: [
         "Pista: seus dentes e pernas revelam um grande predador terrestre.",
-        "Pista extra: ele viveu na famosa era dos dinossauros."
+        "Pista extra: ele viveu na etapa conhecida pelos dinossauros."
       ]
     },
     {
@@ -57,21 +57,21 @@
       fact: "Conviveu com seres humanos durante o período glacial e era adaptado a ambientes muito frios.",
       clues: [
         "Pista: é um grande mamífero coberto de pelos e adaptado ao frio.",
-        "Pista extra: pertence à era mais recente, a era dos mamíferos."
+        "Pista extra: pertence à etapa mais recente, marcada pela expansão dos mamíferos."
       ]
     }
   ];
 
   const targets = {
-    precambriana: 88.239,
-    paleozoica: 94.522,
-    mesozoica: 98.565,
+    cambriano: 10.35,
+    paleozoica: 53.42,
+    mesozoica: 87.8,
     cenozoica: 100
   };
 
   const initialTimeline = {
-    precambriana: 58,
-    paleozoica: 70,
+    cambriano: 18,
+    paleozoica: 58,
     mesozoica: 82,
     cenozoica: 94
   };
@@ -636,11 +636,11 @@
 
     fossilCard.setAttribute(
       "aria-label",
-      "Fóssil revelado. Observe a imagem e escolha a era correta."
+      "Fóssil revelado. Observe a imagem e escolha a etapa correta."
     );
 
     scanStatus.textContent =
-      "Fóssil revelado! Observe com calma. Quando estiver pronto, role para baixo e escolha a era.";
+      "Fóssil revelado! Observe com calma. Quando estiver pronto, role para baixo e escolha a etapa.";
 
     classificationPanel.hidden = false;
 
@@ -756,7 +756,7 @@
       scannerResult.className = "answer-box wrong";
 
       scannerResult.innerHTML =
-        "<h4>Ainda não — tente outra era.</h4>" +
+        "<h4>Ainda não — tente outra etapa.</h4>" +
         "<p>" +
         currentFossil.clues[clueIndex] +
         "</p>";
@@ -782,7 +782,7 @@
       "<h4>Correto! É " +
       currentFossil.name +
       ".</h4>" +
-      "<p>Ele pertence à era " +
+      "<p>Ele pertence à etapa " +
       '<strong style="color:' +
       currentFossil.color +
       '">' +
@@ -794,7 +794,7 @@
       '<a class="secondary-button link-button" href="' +
       currentFossil.href +
       '">' +
-      "Explorar esta era" +
+      "Explorar esta etapa" +
       "</a>" +
       "</div>";
 
@@ -889,10 +889,10 @@
     }
 
     if (average <= 8) {
-      return "Muito bem! Você percebeu que as eras mais recentes ocupam uma parte pequena da linha.";
+      return "Muito bem! Você percebeu as proporções das etapas na linha.";
     }
 
-    return "Boa tentativa! A escala verdadeira surpreende: quase toda a história está na Pré-Cambriana.";
+    return "Boa tentativa! A escala verdadeira mostra as proporções dos últimos 541 milhões de anos.";
   }
 
   revealTimeline.addEventListener("click", function () {
